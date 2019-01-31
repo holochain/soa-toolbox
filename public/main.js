@@ -8,7 +8,7 @@ rtb.initialize({
           rtb.board.getAllObjects().then(results => {
             //let allWidgets = results.filter(x => x.type != "FRAME")
             rtb.showNotification('Data is being saved to https://soa-tree.herokuapp.com')
-            fetch('https://a65ecbed.ngrok.io/update-soa-tree-data', {
+            fetch('https://soa-tree.herokuapp.com/update-soa-tree-data', {
               method: 'POST',
               headers: {
                   "Content-Type": "application/json",
