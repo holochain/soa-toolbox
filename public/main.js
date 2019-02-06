@@ -1,5 +1,5 @@
 
-const devMode = true
+const devMode = false
 const liveUrl = 'https://soa-tree.herokuapp.com'
 const devUrl = 'https://e82d7b63.ngrok.io'
 
