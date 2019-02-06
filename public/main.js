@@ -1,3 +1,8 @@
+
+const devMode = true
+const liveUrl = 'https://soa-tree.herokuapp.com'
+const devUrl = 'https://e82d7b63.ngrok.io'
+
 rtb.initialize({
     extensionPoints: {
       bottomBar: {
@@ -7,17 +12,17 @@ rtb.initialize({
         onClick: () => {
           rtb.board.getAllObjects().then(results => {
             //let allWidgets = results.filter(x => x.type != "FRAME")
-            rtb.showNotification('Data is being saved to https://soa-tree.herokuapp.com')
-            fetch('https://soa-tree.herokuapp.com/update-soa-tree-data', {
+            rtb.showNotification('Data is being saved to ' + (devMode ? devUrl : liveUrl))
+            fetch((devMode ? devUrl : liveUrl) + '/update-soa-tree-data', {
               method: 'POST',
               headers: {
                   "Content-Type": "application/json",
               },
               body: JSON.stringify(results)
             }).then(() => {
-              rtb.showNotification('Data was saved. Check out https://soa-tree.herokuapp.com for visualizations of the tree.')
+              rtb.showNotification('Data was saved. Check out ' + (devMode ? devUrl : liveUrl) + ' for visualizations of the tree.')
             })
-          })          
+          })
         }
       }
     }
