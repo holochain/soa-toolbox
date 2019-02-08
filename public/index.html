@@ -16,7 +16,7 @@
                 //id of viz container element  
                 injectInto: 'tree',
                 //set duration for the animation  
-                duration: 800,
+                duration: 300,
                 //set animation transition type  
                 transition: $jit.Trans.Quart.easeInOut,
                 // constrained: false,
@@ -28,7 +28,7 @@
                 Navigation: {
                     enable: true,
                     panning: true,
-                    zooming: 20
+                    // zooming: 20
                 },
                 //set node and edge styles  
                 //set overridable=true for styling individual  
@@ -63,8 +63,19 @@
                 //Use this method to add event handlers and styles to  
                 //your node.  
                 onCreateLabel: function (label, node) {
+
+                    var red = "#f24726"
+                    var yellow = "#fac710"
+                    // count children
+                    var smallCount = 0;
+                    var uncertainCount = 0;
+                    node.eachSubnode(function(n){  
+                        if (n.data.$color === red) uncertainCount++
+                        else if (n.data.small) smallCount++
+                    });
+                    label.innerHTML = node.name + "<br>S: " + smallCount + " / U: " + uncertainCount; 
+
                     label.id = node.id;
-                    label.innerHTML = node.name;
                     label.onclick = function () {
                         st.onClick(node.id);
                     };

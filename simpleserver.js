@@ -58,7 +58,9 @@ app.post('/update-soa-tree-data', function (req, res) {
   // build the data for the spacetree
     // gets the Holochain root node
   var rootId = '3074457346387129258'
-  var root = req.body.find(i => i.id === rootId)
+
+  var closedAlphaRootNode = '3074457346342611504'
+  var root = req.body.find(i => i.id === closedAlphaRootNode)
   spaceTreeData = {
     id: root.id,
     name: root.text,
@@ -71,7 +73,7 @@ app.post('/update-soa-tree-data', function (req, res) {
   function addChildren(node) {
     threeData.links
       // get all the links that haven't been collected yet, and that are either from or to the node of interest
-      .filter(link => (link.source === node.id || link.target === node.id) && !collectedLinks[link.id])
+      .filter(link => (link.source === node.id || link.target === node.id) && !collectedLinks[link.id] && link.id !== '3074457346342627608')
       // add them to collected links, and to the children of the node of interest, and recurse
       .forEach(link => {
         collectedLinks[link.id] = link
@@ -81,7 +83,8 @@ app.post('/update-soa-tree-data', function (req, res) {
           id: connectedNode.id,
           name: connectedNode.text,
           data: {
-            $color: connectedNode.style ? connectedNode.style.backgroundColor || connectedNode.style.stickerBackgroundColor : 'red'
+            $color: connectedNode.style ? connectedNode.style.backgroundColor || connectedNode.style.stickerBackgroundColor : 'red',
+            small: connectedNode.style ? connectedNode.style.borderColor === "#0ca789" : false
           },
           children: []
         }

@@ -1,7 +1,7 @@
 
 const devMode = false
 const liveUrl = 'https://soa-tree.herokuapp.com'
-const devUrl = 'https://e82d7b63.ngrok.io'
+const devUrl = 'https://2bc62ac7.ngrok.io'
 
 rtb.initialize({
     extensionPoints: {
