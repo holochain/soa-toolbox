@@ -73,7 +73,7 @@ app.post('/update-soa-tree-data', function (req, res) {
   function addChildren(node) {
     threeData.links
       // get all the links that haven't been collected yet, and that are either from or to the node of interest
-      .filter(link => (link.source === node.id || link.target === node.id) && !collectedLinks[link.id] && link.id !== '3074457346342627608')
+      .filter(link => (link.source === node.id || link.target === node.id) && !collectedLinks[link.id] && link.id !== '3074457346469683813')
       // add them to collected links, and to the children of the node of interest, and recurse
       .forEach(link => {
         collectedLinks[link.id] = link

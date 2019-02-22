@@ -21,9 +21,9 @@
                 transition: $jit.Trans.Quart.easeInOut,
                 // constrained: false,
                 orientation: 'top',
-                levelsToShow: 20,
+                levelsToShow: 4,
                 //set distance between node and its children  
-                levelDistance: 80,
+                levelDistance: 90,
                 //enable panning  
                 Navigation: {
                     enable: true,
@@ -66,14 +66,20 @@
 
                     var red = "#f24726"
                     var yellow = "#fac710"
+                    var green = "#8fd14f"
                     // count children
-                    var smallCount = 0;
-                    var uncertainCount = 0;
-                    node.eachSubnode(function(n){  
+                    var totalSmallCount = 0
+                    var completeSmallCount = 0
+                    var uncertainCount = 0
+                    function checkNode(n) {
                         if (n.data.$color === red) uncertainCount++
-                        else if (n.data.small) smallCount++
-                    });
-                    label.innerHTML = node.name + "<br>S: " + smallCount + " / U: " + uncertainCount; 
+                        else if (n.data.small) totalSmallCount++
+
+                        if (n.data.small && n.data.$color === green) completeSmallCount++
+                        n.eachSubnode(checkNode)
+                    }
+                    checkNode(node)
+                    label.innerHTML = `${node.name}<br>S: ${completeSmallCount}/${totalSmallCount} U: ${uncertainCount}`;
 
                     label.id = node.id;
                     label.onclick = function () {
