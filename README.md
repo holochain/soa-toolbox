@@ -11,10 +11,10 @@ This is meant for the purposes of being able to better track our work and progre
 The data must be structured in a particular way for this to work.
 
 There are certain colors that must be used:
-This red #f24726 as a backgroun as "Uncertain"
-This orange #fac710 as a background as "Incomplete"
-This light green #8fd14f as a background as "Complete"
-This darker green as #0ca789 as a border for a "Small"
+- This red #f24726 as a backgroun as "Uncertain"
+- This orange #fac710 as a background as "Incomplete"
+- This light green #8fd14f as a background as "Complete"
+- This darker green as #0ca789 as a border for a "Small"
 
 An uncertain is something which hasn't been broken down into smalls yet, thus it is unknown how long it will take.
 A small is a thing which is discrete and in itself attainable, and shouldn't represent more than 1 days worth of work (otherwise it's not a small).
