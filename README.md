@@ -11,7 +11,7 @@ This is meant for the purposes of being able to better track our work and progre
 The data must be structured in a particular way for this to work.
 
 There are certain colors that must be used:
-- This red #f24726 as a backgroun as "Uncertain"
+- This red #f24726 as a background as "Uncertain"
 - This orange #fac710 as a background as "Incomplete"
 - This light green #8fd14f as a background as "Complete"
 - This darker green as #0ca789 as a border for a "Small"
@@ -33,13 +33,8 @@ You will need [nodejs](https://nodejs.org).
 
 ## To develop
 
-Open `public/main.js`
-Switch `devMode` to `true`
-
 Run `./ngrok http 80` to open a tunnel from the web to your local server
-Copy the public https address, like `https://958628dd.ngrok.io` to your clipboard
-Replace the value in the following line in `public/main.js` with the copied url.
-`const devUrl = 'https://958628dd.ngrok.io'`
+Copy the public https address, like `https://958628dd.ngrok.io` to your clipboard.
 
 Load the [admin page for the app](https://realtimeboard.com/app/account/profile/apps/), called SoA Scraper.
 Combine the ngrok url with the path `rtb.html`:
@@ -51,10 +46,11 @@ In a new terminal, start the nodejs server, which has API endpoints, and also se
 
 Access it on [localhost](http://localhost) and the [SoA tree realtime board](https://realtimeboard.com/app/board/o9J_kyiXmFs=/)
 
-Make changes to the code and do live development work.
+Make changes to the code and live test your work in RTB.
+
+Code of relevance is all `public/main.js`.
 
 **When you're done**
-Switch `devMode` to `false`
 Commit and push to the server
 
 Switch the URL of the web plugin back to the production server HTML endpoint that it was before.

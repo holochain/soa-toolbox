@@ -1,8 +1,3 @@
-
-const devMode = false
-const liveUrl = 'https://soa-tree.herokuapp.com'
-const devUrl = 'https://958628dd.ngrok.io'
-
 rtb.onReady(() => {
   rtb.initialize({
     extensionPoints: {
@@ -83,8 +78,6 @@ function getAndSetCountsForNode(node, allObjects, edges) {
   else if (borderColor === smallGreen) counts.totalSmallCount++
 
   // if a small, complete?
-  console.log(borderColor, smallGreen)
-  console.log(backgroundColor, completeGreen)
   if (borderColor === smallGreen && backgroundColor === completeGreen) counts.completeSmallCount++
   
   // return counts so that recursion can happen
