@@ -129,13 +129,15 @@ function predict(history) {
     const points = history.map(x=>{const date = Date.parse(x.date); return [parseInt(x.uncomplete),date]})
     if (points.length <3) {return ""}
     const r = new regression("linear",points.reverse())
-    const zeroPoint = r.equation[1]
 
-    // if zero point is in the past then we are in trouble!
-    if (zeroPoint < points[0][1] || isNaN(zeroPoint)) {
+    // the slope of the result has to be negative otherwise it means
+    // we'll never finish
+    if (r.string.startsWith("y = -")) {
+        const zeroPoint = r.equation[1]
+        return dateStr(new Date(zeroPoint))
+    } else {
         return "NEVER!";
     }
-    return dateStr(new Date(zeroPoint))
 }
 
 function isToday(date_str) {
