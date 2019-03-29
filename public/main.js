@@ -70,7 +70,7 @@ function getAndSetCountsForNode(node, allObjects, edges) {
     const uncertainCount = Object.keys(counts.uncertain).length
   // at this point, the counts only include the totals of its children
   // use this moment to update the label for this node
-  let countText = `S: ${uncompletedSmallCount}/${totalSmallCount} U: ${uncertainCount}`
+    var countText
 
   // get the main text from the current node
     const orig_text = node.text.split(" "+countPrefix+" ")
@@ -81,18 +81,15 @@ function getAndSetCountsForNode(node, allObjects, edges) {
   let backgroundColor = node.style && (node.style.backgroundColor || node.style.stickerBackgroundColor)
   let borderColor = node.style && node.style.borderColor
 
+    // update the history for time nodes.  We only need to do this if there was an old_counts value,
+    // i.e. we can skip this if this is the very time the tree is being calculated.
     if (backgroundColor === timeTeal && old_counts != undefined) {
         const count_parts = old_counts.split(" "+historySeparator+" ") // spaces because thats what the brs show up as
-        const history = count_parts[1] === undefined ? [] : parseHistory(count_parts[1])
-        const prediction = predict(history)
-        const d = new Date();
-        if (history.length == 0 || !isToday(history[0].date)) {
-            const todays_date = dateStr(d)
-            var today = `${todays_date}: ${uncompletedSmallCount}/${totalSmallCount}`;
-            countText = `${countText}%${prediction}<br/>${historySeparator}<br/>${today};<br/>${historyToString(history)}`
-        } else {
-            countText = `${countText}%${prediction}<br/>${historySeparator}<br/>${historyToString(history)}`
-        }
+        const history_str =  count_parts[1] === undefined ? "" : count_parts[1] ;
+        countText = makeCountsWithHistoryStr(uncompletedSmallCount,totalSmallCount,uncertainCount,history_str)
+    } else {
+        // This is for non-time nodes, just use the plain counts string
+        countText = makeCountsStr(uncompletedSmallCount,totalSmallCount,uncertainCount)
     }
 
   // now determine what this node itself is
@@ -116,6 +113,33 @@ function getAndSetCountsForNode(node, allObjects, edges) {
   return counts
 }
 
+function makeCountsStr(uncompletedSmallCount,totalSmallCount,uncertainCount,prediction) {
+    const base = `S: ${uncompletedSmallCount}/${totalSmallCount} U: ${uncertainCount}`
+    return (!prediction) ? base : `${base} P: ${prediction}`
+}
+
+function makeCountsWithHistoryStr(uncompletedSmallCount,totalSmallCount,uncertainCount,history_str) {
+    const history = history_str === "" ? [] : parseHistory(history_str)
+    const prediction = predict(history)
+    var countText = makeCountsStr(uncompletedSmallCount,totalSmallCount,uncertainCount,prediction)
+    const d = new Date();
+
+    // if there is no history at all, or if we are recalculating for the first time in a day
+    // then add todays count to the top of the history.
+    if (history.length == 0 || !isToday(history[0].date)) {
+        const todays_date = dateStr(d)
+        var today = `${todays_date}~ ${countText}`
+        countText = `${countText}<br/>${historySeparator}<br/>${today}`
+        if (history_str) {
+            countText = `${countText};<br/>${historyToString(history)}`
+        }
+    } else {
+        countText = `${countText}<br/>${historySeparator}<br/>${historyToString(history)}`
+    }
+    return countText
+}
+
+
 function parseDate(date_str) {
     const parts = date_str.split('-');
     return new Date(parts[0], parts[1] - 1, parts[2]);
@@ -123,6 +147,46 @@ function parseDate(date_str) {
 
 function dateStr(d) {
     return d.getFullYear()  + "-" + ("0"+(d.getMonth()+1)).slice(-2)+ "-"+ ("0" + d.getDate()).slice(-2)
+}
+
+function isToday(date_str) {
+    const first = parseDate(date_str);
+    const second = new Date();
+    return first.getYear() == second.getYear() && first.getDate() == second.getDate() && first.getMonth() == second.getMonth()
+}
+
+function historyToString(history) {
+    return history.map(x => {
+        return `${x.date}~ ${makeCountsStr(x.uncomplete,x.total,x.unknown,x.prediction)}`
+    }).join(";<br/>")
+}
+
+function parseHistory(historyStr) {
+    const h = historyStr.split(/; */).filter(x=> x!="");
+
+    const re = /([^~]+)~ S: (.*?)\/(.*?) U: (.*)( P: (.*?))*/;
+    const old_re = /(.*?): (.*)\/(.*)/;
+    return h.map(x => {
+        let m = re.exec(x)
+        if (m) {
+            return {
+                date: m[1],
+                uncomplete: m[2],
+                total: m[3],
+                unknown: !m[4]?"?":m[4],
+                prediction: m[6],
+            }
+        }
+        m = old_re.exec(x)
+        if (m) {
+            return {
+                date: m[1],
+                uncomplete: m[2],
+                total: m[3],
+                unknown: "?"
+            }
+        }
+    })
 }
 
 function predict(history) {
@@ -138,30 +202,6 @@ function predict(history) {
     } else {
         return "NEVER!";
     }
-}
-
-function isToday(date_str) {
-    const first = parseDate(date_str);
-    const second = new Date();
-    return first.getYear() == second.getYear() && first.getDate() == second.getDate() && first.getMonth() == second.getMonth()
-}
-
-function historyToString(history) {
-    return history.map(x => {
-        return `${x.date}: ${x.uncomplete}/${x.total}`
-    }).join(";<br/>")
-}
-
-function parseHistory(historyStr) {
-    const h = historyStr.split("; ");
-    return h.map(x => {
-        const y= x.split(": ")
-        const z = y[1].split("/")
-        return {
-            date: y[0],
-            uncomplete: z[0],
-            total: z[1]
-    }})
 }
 
 function validateSelection(selection) {
