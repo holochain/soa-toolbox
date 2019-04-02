@@ -98,5 +98,5 @@ app.post('/update-soa-tree-data', function (req, res) {
 })
 
 app.listen(process.env.PORT || 8088, function () {
-  console.log('CORS-enabled web server listening on port ' + (process.env.PORT || 80))
+  console.log('CORS-enabled web server listening on port ' + (process.env.PORT || 8088))
 })
