@@ -3,7 +3,7 @@ rtb.onReady(() => {
     extensionPoints: {
       bottomBar: {
         title: 'Set selected as complete',
-        svgIcon: '<circle cx="12" cy="12" r="9" fill="solid" fill-rule="evenodd" stroke="#8fd14f" stroke-width="1"/>',
+        svgIcon: '<circle cx="12" cy="12" r="9" fill="#8fd14f" fill-rule="evenodd" stroke="#0ca789" stroke-width="3"/>',
         positionPriority: 2,
         onClick: completeSelected
       }
