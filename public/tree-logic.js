@@ -2,7 +2,7 @@ rtb.onReady(() => {
   rtb.initialize({
     extensionPoints: {
       bottomBar: {
-        title: 'Acorn: alculate Subtree Sizes for Selected',
+        title: 'Acorn: calculate subtree sizes for selected',
         svgIcon: '<circle cx="12" cy="12" r="9" fill="solid" fill-rule="evenodd" stroke="currentColor" stroke-width="1"/>',
         positionPriority: 2,
         onClick: updateDataForSelected
