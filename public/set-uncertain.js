@@ -27,8 +27,8 @@ async function uncertainSelected() {
 
   rtb.board.widgets.shapes.update(root.id, { style: { 
     backgroundColor: uncertainRed,
-    borderColor: uncertainRed,
-    borderWidth: 0
+    borderColor: "#000000",
+    borderWidth: 2
   }})
 }
 
