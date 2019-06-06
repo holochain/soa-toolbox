@@ -33,7 +33,7 @@ You will need [nodejs](https://nodejs.org).
 
 ## To develop
 
-Run `./ngrok http 80` to open a tunnel from the web to your local server
+Run `./ngrok http 80` to open a tunnel from the web to your local server *(Note: I had to run `ngrok http 8088` —Will)
 Copy the public https address, like `https://958628dd.ngrok.io` to your clipboard.
 
 Load the [admin page for the app](https://realtimeboard.com/app/account/profile/apps/), called SoA Scraper.
@@ -59,4 +59,4 @@ Stop the ngrok server and the nodejs server
 
 ## Documentation for RTB API
 
-[https://developers.realtimeboard.com/docs/sdk](https://developers.realtimeboard.com/docs/sdk)
+[https://developers.realtimeboard.com/docs/sdk](https://developers.miro.com/docs/sdk-doc)
