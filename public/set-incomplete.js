@@ -3,7 +3,7 @@ rtb.onReady(() => {
   rtb.initialize({
     extensionPoints: {
       bottomBar: {
-        title: 'Set selected as incomplete',
+        title: 'ᴀᴄᴏʀɴ: Set selected as incomplete',
         svgIcon: incompleteIcon,
         positionPriority: 2,
         onClick: incompleteSelected

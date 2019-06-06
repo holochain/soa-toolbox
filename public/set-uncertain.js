@@ -3,7 +3,7 @@ rtb.onReady(() => {
   rtb.initialize({
     extensionPoints: {
       bottomBar: {
-        title: 'Set selected as uncertain',
+        title: 'ᴀᴄᴏʀɴ: Set selected as uncertain',
         svgIcon: uncertainIcon,
         positionPriority: 2,
         onClick: uncertainSelected

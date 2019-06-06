@@ -38,7 +38,7 @@ rtb.onReady(() => {
   rtb.initialize({
     extensionPoints: {
       bottomBar: {
-        title: 'Acorn: calculate subtree sizes for selected',
+        title: 'ᴀᴄᴏʀɴ: Calculate subtree sizes for selected', // note: gets turned to lowercase by Miro
         svgIcon: treeLogicIcon,
         positionPriority: 2,
         onClick: updateDataForSelected
