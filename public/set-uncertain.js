@@ -1,5 +1,8 @@
 rtb.onReady(() => {
-  const uncertainIcon = '<circle cx="12" cy="12" r="9" fill="#f24726" fill-rule="evenodd" stroke="#f24726" stroke-width="3"/>'
+  const uncertainIcon =`
+  <circle cx="12" cy="12" r="10" fill="#f24726" fill-rule="evenodd" stroke="currentColor" stroke-width="2.5"/>
+  `
+
   rtb.initialize({
     extensionPoints: {
       bottomBar: {

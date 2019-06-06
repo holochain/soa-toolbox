@@ -1,39 +1,41 @@
 rtb.onReady(() => {
   const treeLogicIcon = `
   <svg>
-  <line x1="5.0" y1="8" x2="5.0" y2=16 stroke="hsl(10, 81%, 53%)" stroke-width="1"/>
-  <line x1="5.5" y1="8.0" x2="5.5" y2=16.0 stroke="hsl(8, 81%, 53%)" stroke-width="1"/>
-  <line x1="6.0" y1="7.5" x2="6.0" y2=16.5 stroke="hsl(8, 81%, 53%)" stroke-width="1"/>
-  <line x1="6.5" y1="7.0" x2="6.5" y2=17.0 stroke="hsl(9, 81%, 53%)" stroke-width="1"/>
+  <line x1="4" y1="8" x2="4" y2=16 stroke="hsl(10, 81%, 53%)" stroke-width="1"/>
+  <line x1="4.5" y1="8.0" x2="4.5" y2=16.0 stroke="hsl(9, 81%, 53%)" stroke-width="1"/>
+  <line x1="5.0" y1="8.0" x2="5.0" y2=16.0 stroke="hsl(9, 81%, 53%)" stroke-width="1"/>
+  <line x1="5.5" y1="7.5" x2="5.5" y2=16.5 stroke="hsl(10, 81%, 53%)" stroke-width="1"/>
+  <line x1="6.0" y1="5.5" x2="6.0" y2=18.5 stroke="hsl(10, 81%, 53%)" stroke-width="1"/>
+  <line x1="6.5" y1="5.0" x2="6.5" y2=19.0 stroke="hsl(10, 81%, 53%)" stroke-width="1"/>
   <line x1="7.0" y1="5.0" x2="7.0" y2=19.0 stroke="hsl(10, 81%, 53%)" stroke-width="1"/>
   <line x1="7.5" y1="5.0" x2="7.5" y2=19.0 stroke="hsl(14.2, 81%, 53%)" stroke-width="1"/>
   <line x1="8.0" y1="4.5" x2="8.0" y2=19.5 stroke="hsl(18.4, 81%, 53%)" stroke-width="1"/>
   <line x1="8.5" y1="4.5" x2="8.5" y2=19.5 stroke="hsl(22.6, 81%, 53%)" stroke-width="1"/>
   <line x1="9.0" y1="4.5" x2="9.0" y2=19.5 stroke="hsl(26.8, 81%, 53%)" stroke-width="1"/>
-  <line x1="9.5" y1="4.5" x2="9.5" y2=19.5 stroke="hsl(31.0, 81%, 53%)" stroke-width="1"/>
-  <line x1="10.0" y1="4.0" x2="10.0" y2=20.0 stroke="hsl(35.2, 81%, 53%)" stroke-width="1"/>
+  <line x1="9.5" y1="4.0" x2="9.5" y2=20.0 stroke="hsl(31.0, 81%, 53%)" stroke-width="1"/>
+  <line x1="10.0" y1="3.75" x2="10.0" y2=20.25 stroke="hsl(35.2, 81%, 53%)" stroke-width="1"/>
   <line x1="10.5" y1="3.75" x2="10.5" y2=20.25 stroke="hsl(39.4, 81%, 53%)" stroke-width="1"/>
   <line x1="11.0" y1="3.75" x2="11.0" y2=20.25 stroke="hsl(43.6, 81%, 53%)" stroke-width="1"/>
   <line x1="11.5" y1="3.75" x2="11.5" y2=20.25 stroke="hsl(47, 81%, 53%)" stroke-width="1"/>
   <line x1="12.0" y1="3.75" x2="12.0" y2=20.25 stroke="hsl(47, 81%, 53%)" stroke-width="1"/>
   <line x1="12.5" y1="3.75" x2="12.5" y2=20.25 stroke="hsl(47, 81%, 53%)" stroke-width="1"/>
   <line x1="13.0" y1="3.75" x2="13.0" y2=20.25 stroke="hsl(47, 81%, 53%)" stroke-width="1"/>
-  <line x1="13.5" y1="3.75" x2="13.5" y2=20.25 stroke="hsl(51.7, 81%, 53%)" stroke-width="1"/>
-  <line x1="14.0" y1="3.75" x2="14.0" y2=20.25 stroke="hsl(56.4, 81%, 53%)" stroke-width="1"/>
-  <line x1="14.5" y1="4.0" x2="14.5" y2=20.0 stroke="hsl(61.1, 81%, 53%)" stroke-width="1"/>
-  <line x1="15.0" y1="4.5" x2="15.0" y2=19.5 stroke="hsl(65.8, 81%, 53%)" stroke-width="1"/>
-  <line x1="15.5" y1="4.5" x2="15.5" y2=19.5 stroke="hsl(70.5, 81%, 53%)" stroke-width="1"/>
-  <line x1="16.0" y1="4.5" x2="16.0" y2=19.5 stroke="hsl(75.2, 81%, 53%)" stroke-width="1"/>
-  <line x1="16.5" y1="4.5" x2="16.5" y2=19.5 stroke="hsl(79.9, 81%, 53%)" stroke-width="1"/>
-  <line x1="17.0" y1="5.0" x2="17.0" y2=19.0 stroke="hsl(84.6, 81%, 53%)" stroke-width="1"/>
-  <line x1="17.5" y1="5.0" x2="17.5" y2=19.0 stroke="hsl(90, 81%, 53%)" stroke-width="1"/>
-  <line x1="18.0" y1="7.0" x2="18.0" y2=17.0 stroke="hsl(90, 81%, 53%)" stroke-width="1"/>
-  <line x1="18.5" y1="7.5" x2="18.5" y2=16.5 stroke="hsl(90, 81%, 53%)" stroke-width="1"/>
-  <line x1="19.0" y1="8.0" x2="19.0" y2=16.0 stroke="hsl(90, 81%, 53%)" stroke-width="1"/>
-  <line x1="19.5" y1="8.0" x2="19.5" y2=16.0 stroke="hsl(90, 81%, 53%)" stroke-width="1"/>
-  <circle cx="12" cy="12" r="9" fill="none" fill-rule="evenodd" stroke="#000000" stroke-width="3" stroke-dasharray="2,2.3"/>
-  <circle cx="12" cy="12" r="8.25" fill="none" stroke="#000000" stroke-width="1.5" stroke-linejoin="round"/>
-  </svg> `
+  <line x1="13.5" y1="3.75" x2="13.5" y2=20.25 stroke="hsl(51.7, 75%, 53%)" stroke-width="1"/>
+  <line x1="14.0" y1="4.0" x2="14.0" y2=20.0 stroke="hsl(56.4, 65%, 53%)" stroke-width="1"/>
+  <line x1="14.5" y1="4.5" x2="14.5" y2=19.5 stroke="hsl(61.1, 60%, 53%)" stroke-width="1"/>
+  <line x1="15.0" y1="4.5" x2="15.0" y2=19.5 stroke="hsl(65.8, 60%, 53%)" stroke-width="1"/>
+  <line x1="15.5" y1="4.5" x2="15.5" y2=19.5 stroke="hsl(70.5, 59%, 53%)" stroke-width="1"/>
+  <line x1="16.0" y1="4.5" x2="16.0" y2=19.5 stroke="hsl(75.2, 59%, 53%)" stroke-width="1"/>
+  <line x1="16.5" y1="4.5" x2="16.5" y2=19.5 stroke="hsl(79.9, 59%, 53%)" stroke-width="1"/>
+  <line x1="17.0" y1="5.0" x2="17.0" y2=19.0 stroke="hsl(84.6, 59%, 53%)" stroke-width="1"/>
+  <line x1="17.5" y1="5.0" x2="17.5" y2=19.0 stroke="hsl(90, 59%, 53%)" stroke-width="1"/>
+  <line x1="18.0" y1="5.0" x2="18.0" y2=19.0 stroke="hsl(90, 59%, 53%)" stroke-width="1"/>
+  <line x1="18.5" y1="7.0" x2="18.5" y2=17.0 stroke="hsl(90, 59%, 53%)" stroke-width="1"/>
+  <line x1="19.0" y1="7.5" x2="19.0" y2=16.5 stroke="hsl(90, 59%, 53%)" stroke-width="1"/>
+  <line x1="19.5" y1="8.0" x2="19.5" y2=16.0 stroke="hsl(90, 59%, 53%)" stroke-width="1"/>
+  <circle cx="12" cy="12" r="10.3" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="2,2.3"/>
+  <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.25"/>
+  </svg>`
 
   rtb.initialize({
     extensionPoints: {

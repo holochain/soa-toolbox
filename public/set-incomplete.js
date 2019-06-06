@@ -1,5 +1,8 @@
 rtb.onReady(() => {
-  const incompleteIcon = '<circle cx="12" cy="12" r="9" fill="#fac710" fill-rule="evenodd" stroke="#0ca789" stroke-width="3"/>'
+  const incompleteIcon =`
+  <circle cx="12" cy="12" r="8" fill="#fac710" fill-rule="evenodd" stroke="#0ca789" stroke-width="2.5"/>
+  <circle cx="12" cy="12" r="10" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2.5"/>`
+
   rtb.initialize({
     extensionPoints: {
       bottomBar: {
