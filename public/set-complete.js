@@ -15,7 +15,7 @@ rtb.onReady(() => {
 
 async function completeSelected() {
   // gets the selected widgets on the board, returns an array
-  let selection = await rtb.board.getSelection()
+  let selection = await rtb.board.selection.get()
 
   // validate that we can proceed with the selected item
   if (!validateSelection(selection)) return
