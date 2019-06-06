@@ -1,9 +1,10 @@
 rtb.onReady(() => {
+  const uncertainIcon = '<circle cx="12" cy="12" r="9" fill="#f24726" fill-rule="evenodd" stroke="#f24726" stroke-width="3"/>'
   rtb.initialize({
     extensionPoints: {
       bottomBar: {
         title: 'Set selected as uncertain',
-        svgIcon: '<circle cx="12" cy="12" r="9" fill="#f24726" fill-rule="evenodd" stroke="#f24726" stroke-width="3"/>',
+        svgIcon: uncertainIcon,
         positionPriority: 2,
         onClick: uncertainSelected
       }

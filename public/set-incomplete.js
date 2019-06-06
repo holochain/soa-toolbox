@@ -1,9 +1,10 @@
 rtb.onReady(() => {
+  const incompleteIcon = '<circle cx="12" cy="12" r="9" fill="#fac710" fill-rule="evenodd" stroke="#0ca789" stroke-width="3"/>'
   rtb.initialize({
     extensionPoints: {
       bottomBar: {
         title: 'Set selected as incomplete',
-        svgIcon: '<circle cx="12" cy="12" r="9" fill="#fac710" fill-rule="evenodd" stroke="#0ca789" stroke-width="3"/>',
+        svgIcon: incompleteIcon,
         positionPriority: 2,
         onClick: incompleteSelected
       }
