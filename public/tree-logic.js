@@ -112,7 +112,9 @@ function getAndSetCountsForNode(node, allObjects, edges) {
 
   // get the main text from the current node
     const orig_text = node.text.split(" "+countPrefix+" ")
-    const main_text = orig_text[0]
+    var main_text = orig_text[0]
+    // use ⋅ to recognize the end of a line and reinsert a line break
+    main_text = main_text.replace(/⋅/g,"⋅<br>")
     const old_counts = orig_text[1]
 
   // get the background color and border color, since that's representing completion and node-type
