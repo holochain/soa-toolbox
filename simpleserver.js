@@ -16,7 +16,7 @@ app.use(express.json({limit: '50mb'}))
 
 // necessary CORS headers
 app.use(cors({
-    origin: 'https://realtimeboard.com'
+    origin: 'https://miro.com'
 }))
 
 // static file server
