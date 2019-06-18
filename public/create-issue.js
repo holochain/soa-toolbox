@@ -64,7 +64,11 @@ function getTitleFromNode(root) {
 
   var fullText = getFullTextFromNode(root)
   // get the first x words to use as the title
-  return fullText.split(' ').slice(0,titleLength).join(' ') + "..."
+  if (fullText.split(' ').length <= titleLength) {
+    return fullText
+  } else {
+    return fullText.split(' ').slice(0,titleLength).join(' ') + "..."
+  }
 }
 
 // calculate the issue body text from a node. This is the entire text plus a
