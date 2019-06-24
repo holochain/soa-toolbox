@@ -43,17 +43,17 @@ You will need admin access to your Miro team.
    1. Start ngrok on port 8088 to open a tunnel from the web to your local server: `ngrok http 8088` or `./ngrok http 8088`
    2. Copy the public https address, like `https://958648dd.ngrok.io` to your clipboard.
 2. #### **Set up Miro**
-   0. Admin page
-   1. Make an app for each web plugin
-   2. give it `boards_content:read` and `board_content:write` scopes
-   3. Enter the iframe url: Combine the ngrok url with the path to the html file for that plugin `rtb.html`:
-   `https://958628dd.ngrok.io/rtb.html`
-   4. Click Install app and get OAuth Token, you won't need the token.
+   1. Open Miro settings: Miro > [Your organization] > Settings > Profile settings > Your apps [Beta].
+   2. For each web plugin, create a new app.
+   3. Give it `boards_content:read` and `board_content:write` scopes
+   4. In the Iframe url box, combine the ngrok url with the path to the html file for that plugin. For example, for the set-complete plugin, the url would look like `https﻿://958648dd.ngrok.io/set-complete.html`.
+   5. Click Install app and get OAuth Token. Select your Miro team. You won't need the OAuth token you receive.
 3. #### **Create config file**
    1. *You'll need a config file for the create-issue plugin to know about and have access to your GitHub repos.* A sample config file to copy and edit is provided.
    2. For each repo you'd like to add issues to, create an entry in the config file.
    3. The key should be the unique path to your GitHub repo. This is usually a username or organization followed by a slash and then the repo name. For example: `holochain/soa-toolbox`
-   4. Under accessToken, enter a GitHub Personal Access Token with repo permissions. [Instructions](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line).
+   4. Under accessToken, enter a [GitHub Personal Access Token](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line) with repo permissions.
+  [comment]: # (Watch out! There are non-breaking zero-width space characters in some URLs above)
 
 ## Usage
 
