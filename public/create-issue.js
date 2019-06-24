@@ -47,7 +47,7 @@ rtb.onReady(() => {
         title: 'ᴀᴄᴏʀɴ: Create a GitHub issue for selected node', // note: gets turned to lowercase by Miro
         svgIcon: createIssueIcon,
         positionPriority: 2,
-        onClick: createIssueForSelected
+        onClick: activateModal
       }
     }
   })
@@ -79,26 +79,38 @@ function getTextFromNode(root, boardInfo) {
   return fullText + '</br></br><a href="https://miro.com/app/board/'+boardInfo.id+'/?moveToWidget='+root.id+'">See card in SoA Tree</a>'
 }
 
-async function createIssueForSelected() {
+// validate that the selection is valid and then activate the popup
+async function activateModal() {
   // gets the selected widgets on the board, returns an array
   let selection = await rtb.board.selection.get()
-
-  // gets the board info
-  let boardInfo = await rtb.board.info.get()
 
   // validate that we can proceed with the selected item
   if (!validateSelection(selection)) return
 
-  rtb.showNotification('Creating issue')
+  // prompt the user to choose the repo in which to create the issue
+  rtb.board.ui.openModal('create-issue-modal.html')
+}
 
-  // root is the widget that the issue is being created from
+// create and send an issue to the specified repo
+async function createAndSendIssue(repoPath) {
+  // gets the selected widgets on the board, returns an array
+  let selection = await rtb.board.selection.get()
+  // gets the board info
+  let boardInfo = await rtb.board.info.get()
+
+  rtb.showNotification('Creating issue...')
+  console.log("creating issue to send to repo: " + repoPath)
+
   let root = selection[0]
 
   var title = getTitleFromNode(root)
   var text = getTextFromNode(root, boardInfo)
 
-  // create the issue
-  createIssue(title, text)
+  // let repoOwner = repoPath.split('/')[0]
+  // let repoName = repoPath.split('/')[1]
+
+  // send the issue to simpleserver to be sent to GitHub
+  sendIssue(title, text, repoPath)
 
   rtb.showNotification('Successfully created issue')
 }
@@ -109,28 +121,36 @@ const completeGreen = "#8fd14f"
 const smallGreen = "#0ca789"
 const timeTeal = "#12cdd4"
 
-const ACCESS_TOKEN = 'fakeaccesstokenfakeaccesstokenfakeaccesstoken'
-const REPO_OWNER = 'h-be'
-const REPO_NAME = 'phloem'
+var variables = {}
+function setVariable(attribute, value) {
+  variables[attribute] = value
+}
 
-function createIssue(title, body, assignee = null, milestone = null, labels = null) {
+function getVariable(attribute) {
+  return variables[attribute]
+}
 
-  var url = 'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/issues'
+variables["test"] = 104
+
+function sendIssue(title, body, repoPath, assignee = null, labels = null) {
+
+  var url = 'https://3a4a28bf.ngrok.io/create-issue'
 
   var xhr = new XMLHttpRequest()
   xhr.open('POST', url, true)
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-  xhr.setRequestHeader("Authorization", "BEARER " + ACCESS_TOKEN)
+  xhr.setRequestHeader("Content-type", "application/json")
 
   // set up the issue JSON with the desired information
-  var issue = JSON.stringify({
-    "title": title,
-    "body": body,
-    "labels": [
-      "acorn"
-    ]
-  })
+  var json = {
+    "issueRepoPath": repoPath,
+    "issueTitle": title,
+    "issueBody": body,
+    "issueLabels": [],
+    "issueAssignee": null
+  }
 
+  // convert issue JSON to string
+  var issue = JSON.stringify(json)
   // send issue
   xhr.send(issue)
 

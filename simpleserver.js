@@ -55,6 +55,17 @@ app.post('/create-issue', function (req, res) {
   // console.log(res)
   })
 
+})
+
+// share the list of repos from config file with Miro so we can display them in the pop-up
+app.get('/get-config-repos', function (req, res) {
+  // extract repo names from config file
+  var repos = Object.keys(config.repos)
+  // console.log(repos)
+  res.send(repos)
+})
+
+
 app.get('/get-3d-data', function (req, res) {
   res.send(threeData)
 })
