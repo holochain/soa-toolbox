@@ -55,7 +55,10 @@
 <select id="repo-selector" autofocus>
 </select>
 
-<button onclick="createAndSendIssue(document.getElementById('repo-selector').value)
+&nbsp;&nbsp;<button onclick="
+createAndSendIssue(document.getElementById('repo-selector').value).then(_ => {
+  rtb.board.ui.closeModal()
+})
 ">Create issue</button>
 
 <br><br><br>
