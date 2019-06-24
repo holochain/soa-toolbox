@@ -35,8 +35,13 @@
             color: rgba(0, 0, 0, 0.8);
         }
 
+        .close-button {
+          position: absolute;
+          bottom: 10%;
+        }
+
         body {
-          padding: 48px 0 0 48px;
+          padding: 9% 10% 0;
         }
 
     </style>
@@ -50,14 +55,12 @@
 <select id="repo-selector" autofocus>
 </select>
 
-<br>
-
 <button onclick="createAndSendIssue(document.getElementById('repo-selector').value)
 ">Create issue</button>
 
 <br><br><br>
 
-<button class="close-button" onclick="rtb.board.ui.closeModal()">Close</button>
+<button class="close-button" onclick="rtb.board.ui.closeModal()">Cancel</button>
 
 <script src="create-issue.js"></script>
 
