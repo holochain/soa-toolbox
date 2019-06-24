@@ -140,9 +140,9 @@ const timeTeal = "#12cdd4"
 // }
 // variables["test"] = 104
 
-function sendIssue(title, body, repoPath, assignee = null, labels = null) {
+async function sendIssue(title, body, repoPath, assignee = null, labels = null) {
 
-  var serverURL = getServerURL()
+  var serverURL = await getServerURL()
   var url = serverURL + "/create-issue"
 
   var xhr = new XMLHttpRequest()
