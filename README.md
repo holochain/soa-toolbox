@@ -1,10 +1,17 @@
-# Acorn Helper
+# soa-toolbox
+
+> Tools for using an Acorn State of Affairs on Miro
+
+## Background
 
 The architecture here is that we serve an HTML file which has the realtime board SDK in it, plus our own custom JS that uses that.
 
-This HTML gets loaded as an iframe into any realtime board for the Holo team. 
+This HTML gets loaded as an iframe into any realtime board for the Holo team.
 
-This plugin is currently capable of a 'click-to-update-selected' functionality, that updates widgets with custom info that is calculated. 
+The plugins currently present these functionalities:
+* Calculate subtree size — updates selected widget and children with calculations.
+* Set node status — change nodes to uncertain, incomplete, or complete
+* Create GitHub issue — create a GitHub issue out of the selected node in a repository of choice
 
 This is meant for the purposes of being able to better track our work and progress.
 
@@ -25,30 +32,37 @@ Additionally, **and this is important**, edges must be drawn FROM the child, TO 
 
 ## Set up
 
-Install [ngrok](https://ngrok.com/), for development purposes
+### Dependencies
 
-You will need admin access to the Holo realtime board team.
+* [ngrok](https://ngrok.com/) (for development)
+* [nodejs](https://nodejs.org)
 
-You will need [nodejs](https://nodejs.org).
+You will need admin access to your Miro team.
 
-## To develop
+1. #### **Set up ngrok** (for development)
+   1. Start ngrok on port 8088 to open a tunnel from the web to your local server: `ngrok http 8088` or `./ngrok http 8088`
+   2. Copy the public https address, like `https://958648dd.ngrok.io` to your clipboard.
+2. #### **Set up Miro**
+   0. Admin page
+   1. Make an app for each web plugin
+   2. give it `boards_content:read` and `board_content:write` scopes
+   3. Enter the iframe url: Combine the ngrok url with the path to the html file for that plugin `rtb.html`:
+   `https://958628dd.ngrok.io/rtb.html`
+   4. Click Install app and get OAuth Token, you won't need the token.
+3. #### **Create config file**
+   1. *You'll need a config file for the create-issue plugin to know about and have access to your GitHub repos.* A sample config file to copy and edit is provided.
+   2. For each repo you'd like to add issues to, create an entry in the config file.
+   3. The key should be the unique path to your GitHub repo. This is usually a username or organization followed by a slash and then the repo name. For example: `holochain/soa-toolbox`
+   4. Under accessToken, enter a GitHub Personal Access Token with repo permissions. [Instructions](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line).
 
-Run `./ngrok http 80` to open a tunnel from the web to your local server *(Note: I had to run `ngrok http 8088` —Will)
-Copy the public https address, like `https://958628dd.ngrok.io` to your clipboard.
-
-Load the [admin page for the app](https://realtimeboard.com/app/account/profile/apps/), called SoA Scraper.
-Combine the ngrok url with the path `rtb.html`:
-`https://958628dd.ngrok.io/rtb.html`
-Copy or type that URL into the 'iframe url' form field for the Web-plugin and click 'save'. Keep the original production server URL available as you'll need to replace it later.
+## Usage
 
 In a new terminal, start the nodejs server, which has API endpoints, and also serves static files:
 `npm run start`
 
-Access it on [localhost](http://localhost) and the [SoA tree realtime board](https://realtimeboard.com/app/board/o9J_kyiXmFs=/)
+You should see plugins on your Miro board.
 
-Make changes to the code and live test your work in RTB.
-
-Code of relevance is all `public/main.js`.
+Make changes to the code and live test your work in Miro. You don't have to restart the nodejs server as long as you don't make changes to `simpleserver.js`, run the command `reloadSandbox()` in the developer console on Miro.
 
 **When you're done**
 Commit and push to the server
