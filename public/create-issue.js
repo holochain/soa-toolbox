@@ -144,7 +144,8 @@ variables["test"] = 104
 
 function sendIssue(title, body, repoPath, assignee = null, labels = null) {
 
-  var url = 'https://3a4a28bf.ngrok.io/create-issue'
+  var serverURL = getServerURL()
+  var url = serverURL + "/create-issue"
 
   var xhr = new XMLHttpRequest()
   xhr.open('POST', url, true)
