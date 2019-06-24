@@ -4,7 +4,30 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="https://miro.com/app/static/rtb.uikit.css">
     <script src="https://miro.com/app/static/rtb.sdk.1.1.js"></script>
+    <script>
+    async function populateSelector(){
+      var serverURL = await getServerURL()
+      console.log(`server url: ${serverURL}`)
+      // get the list of repos from the server
+      fetch(serverURL + '/get-config-repos')
+        .then(resp => resp.json())
+        .then(repoList => {
+          console.log(`repo list: ${repoList}`)
 
+          var selector = document.getElementById('repo-selector')
+          console.log(`selector: ${selector}`)
+
+          repoList.forEach(function(repoPath, index) {
+            var option = document.createElement('option')
+            option.innerHTML = repoPath
+            option.value = repoPath
+            selector.appendChild(option)
+          })
+
+        }
+      )
+    }
+    </script>
     <style>
         .rtb-modal-title {
             font-size: 14px;
@@ -19,56 +42,23 @@
     </style>
 </head>
 
-<body onload="setUpPage()">
+<body onload="populateSelector()">
 <div id="test" class="rtb-modal-title">In which repo would you like to create this issue?</div>
 <br>
 
 <select id="repo-selector" autofocus>
 </select>
 
-<button onclick="
-console.log(`get selector by id:`)
-console.log(document.getElementById('repo-selector'))
-">Test getElementById</button>
-
 <br>
-<button onclick="window.parent.createAndSendIssue(document.getElementById('repo-selector').value)
+
+<button onclick="createAndSendIssue(document.getElementById('repo-selector').value)
 ">Create issue</button>
 
 <br><br><br>
+
 <button class="close-button" onclick="rtb.board.ui.closeModal()">Close</button>
-<br><br><br>
-<button onclick="console.log(window.parent.getVariable('test'))">Test</button>
 
-<!-- <script src="create-issue.js"></script> -->
-<script>
-function setUpPage() {
-  // find the config node and get the server url from it
-  configNode = rtb.board.widgets.get({type: 'shape', style:{backgroundColor: "#bada55"}})
-
-  serverURL = configNode.text
-
-  // get the list of repos from the server
-  fetch(serverURL + '/get-config-repos')
-    .then(resp => resp.json())
-    .then(repoList => {
-      // print the list
-      // console.log(repoList)
-
-      var selector = document.getElementById('repo-selector')
-      console.log(`selector: ${selector}`)
-
-      repoList.forEach(function(repoPath, index) {
-        var option = document.createElement('option')
-        option.innerHTML = repoPath
-        option.value = repoPath
-        selector.appendChild(option)
-      })
-
-    }
-  )
-}
-</script>
+<script src="create-issue.js"></script>
 
 </body>
 </html>

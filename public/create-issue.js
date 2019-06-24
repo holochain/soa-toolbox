@@ -79,6 +79,16 @@ function getTextFromNode(root, boardInfo) {
   return fullText + '</br></br><a href="https://miro.com/app/board/'+boardInfo.id+'/?moveToWidget='+root.id+'">See card in SoA Tree</a>'
 }
 
+async function getServerURL() {
+  // find the config node and get the server url from it
+  var configNodes = await rtb.board.widgets.get({type: 'shape', style:{backgroundColor: "#bada55"}})
+  var configNode = configNodes[0]
+  var serverURL = configNode.text
+  // console.log(configNode)
+  // console.log(serverURL)
+  return serverURL
+}
+
 // validate that the selection is valid and then activate the popup
 async function activateModal() {
   // gets the selected widgets on the board, returns an array
