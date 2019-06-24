@@ -2,6 +2,8 @@ var express = require('express')
 var cors = require('cors')
 var serveStatic = require('serve-static')
 var app = express()
+const config = require('./config.json')
+const request = require('request');
 
 let threeData = {
   nodes: [],
