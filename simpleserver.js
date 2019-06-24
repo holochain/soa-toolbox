@@ -26,10 +26,10 @@ app.use(serveStatic('public'))
 
 // send out issue information to GitHub API
 app.post('/create-issue', function (req, res) {
-  // console.log("REQ:")
-  // console.log(req)
+  // console.log(`REQ: ${req}`)
+  // req should contain information about the issue (title, body, labels), and
+  // the repo it should be created in
   var url = 'https://api.github.com/repos/' + req.body.issueRepoPath + '/issues'
-
   // add acorn to the other labels
   req.body.issueLabels.push("acorn")
 
@@ -48,16 +48,15 @@ app.post('/create-issue', function (req, res) {
     headers:  {
       'Authorization': 'Bearer ' + config.repos[req.body.issueRepoPath].accessToken,  // look up access token
       'Content-Type': 'application/json', 
-      'User-Agent': 'soa-scraper-server'
+      'User-Agent': 'soa-toolbox-server' FIXME
     }
   }, function (err, res, body) {
-  // console.log("RES:")
-  // console.log(res)
+  // console.log(`RES: ${res}`)
   })
 
 })
 
-// share the list of repos from config file with Miro so we can display them in the pop-up
+// share the list of repos from config file with Miro so we can display them in the modal pop-up
 app.get('/get-config-repos', function (req, res) {
   // extract repo names from config file
   var repos = Object.keys(config.repos)

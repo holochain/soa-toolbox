@@ -35,7 +35,6 @@ rtb.onReady(() => {
   <line x1="19.5" y1="6.5" x2="19.5" y2=17.5 stroke="hsl(90, 81%, 53%)" stroke-width="1"/>
   <line x1="20" y1="6.5" x2="20" y2=17.5 stroke="hsl(90, 81%, 53%)" stroke-width="1"/>
   <line x1="20.5" y1="6.5" x2="20.5" y2=17.5 stroke="hsl(90, 81%, 53%)" stroke-width="1"/>
-
   <circle cx="12" cy="12" r="10" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2.5"/>
   <line x1="12" y1="6" x2="12" y2="14" stroke="currentColor" stroke-width="2.5"/>
   <line x1="12" y1="15.5" x2="12" y2="18" stroke="currentColor" stroke-width="2.5"/>
@@ -67,6 +66,7 @@ function getTitleFromNode(root) {
   if (fullText.split(' ').length <= titleLength) {
     return fullText
   } else {
+    // add ... if the text is longer than 10 words
     return fullText.split(' ').slice(0,titleLength).join(' ') + "..."
   }
 }
@@ -74,14 +74,17 @@ function getTitleFromNode(root) {
 // calculate the issue body text from a node. This is the entire text plus a
 // link back to the node. Takes board info object because this has to be gotten
 // inside an async function.
-function getTextFromNode(root, boardInfo) {
+function getBodyFromNode(root, boardInfo) {
   var fullText = getFullTextFromNode(root)
+  // append link to node in Miro
   return fullText + '</br></br><a href="https://miro.com/app/board/'+boardInfo.id+'/?moveToWidget='+root.id+'">See card in SoA Tree</a>'
 }
 
+// return the URL that is typed in a config node in Miro
 async function getServerURL() {
-  // find the config node and get the server url from it
-  var configNodes = await rtb.board.widgets.get({type: 'shape', style:{backgroundColor: "#bada55"}})
+  let configBackgroundColor = "#CA59E2"
+  // find nodes with the right background color. Miro turns hex codes lowercase
+  var configNodes = await rtb.board.widgets.get({type: 'shape', style:{backgroundColor: configBackgroundColor.toLowerCase()}})
   var configNode = configNodes[0]
   var serverURL = configNode.text
   // console.log(configNode)
@@ -89,11 +92,10 @@ async function getServerURL() {
   return serverURL
 }
 
-// validate that the selection is valid and then activate the popup
+// check that the selection is valid and then activate the modal popup
 async function activateModal() {
   // gets the selected widgets on the board, returns an array
   let selection = await rtb.board.selection.get()
-
   // validate that we can proceed with the selected item
   if (!validateSelection(selection)) return
 
@@ -101,7 +103,7 @@ async function activateModal() {
   rtb.board.ui.openModal('create-issue-modal.html')
 }
 
-// create and send an issue to the specified repo
+// create and send an issue of the selected node to the specified repo
 async function createAndSendIssue(repoPath) {
   // gets the selected widgets on the board, returns an array
   let selection = await rtb.board.selection.get()
@@ -114,15 +116,12 @@ async function createAndSendIssue(repoPath) {
   let root = selection[0]
 
   var title = getTitleFromNode(root)
-  var text = getTextFromNode(root, boardInfo)
+  var text = getBodyFromNode(root, boardInfo)
 
-  // let repoOwner = repoPath.split('/')[0]
-  // let repoName = repoPath.split('/')[1]
-
-  // send the issue to simpleserver to be sent to GitHub
+  // send the issue to simpleserver.js to be sent to GitHub
   sendIssue(title, text, repoPath)
 
-  rtb.showNotification('Successfully created issue')
+  rtb.showNotification(`Successfully created issue in repo: ${repoPath}`)
 }
 
 const uncertainRed = "#f24726"
@@ -131,16 +130,15 @@ const completeGreen = "#8fd14f"
 const smallGreen = "#0ca789"
 const timeTeal = "#12cdd4"
 
-var variables = {}
-function setVariable(attribute, value) {
-  variables[attribute] = value
-}
-
-function getVariable(attribute) {
-  return variables[attribute]
-}
-
-variables["test"] = 104
+// var variables = {}
+// function setVariable(attribute, value) {
+//   variables[attribute] = value
+// }
+//
+// function getVariable(attribute) {
+//   return variables[attribute]
+// }
+// variables["test"] = 104
 
 function sendIssue(title, body, repoPath, assignee = null, labels = null) {
 
