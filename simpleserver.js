@@ -24,6 +24,37 @@ app.use(cors({
 // static file server
 app.use(serveStatic('public'))
 
+// send out issue information to GitHub API
+app.post('/create-issue', function (req, res) {
+  // console.log("REQ:")
+  // console.log(req)
+  var url = 'https://api.github.com/repos/' + req.body.issueRepoPath + '/issues'
+
+  // add acorn to the other labels
+  req.body.issueLabels.push("acorn")
+
+  // set up the issue JSON with the desired information
+  var issue = {
+    "title": req.body.issueTitle,
+    "body": req.body.issueBody,
+    "labels": req.body.issueLabels
+  }
+
+  request({
+    url:url,
+    method:"POST",
+    json: true,
+    body: issue,
+    headers:  {
+      'Authorization': 'Bearer ' + config.repos[req.body.issueRepoPath].accessToken,  // look up access token
+      'Content-Type': 'application/json', 
+      'User-Agent': 'soa-scraper-server'
+    }
+  }, function (err, res, body) {
+  // console.log("RES:")
+  // console.log(res)
+  })
+
 app.get('/get-3d-data', function (req, res) {
   res.send(threeData)
 })
