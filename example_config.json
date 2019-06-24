@@ -1,0 +1,10 @@
+{
+  "repos": {
+    "user1/repo1": {
+      "accessToken": "15bb0f2e881307af7ea0a9451bbf39767229422e"
+    },
+    "user2/repo2": {
+      "accessToken": "15bb0f2f081307af7e88a9451bbf92775982643d"
+    }
+  }
+}
