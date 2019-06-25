@@ -48,7 +48,7 @@ async function getWidget() {
 
   // If there's no selection, don't do anything
   if (widgets[0] == undefined) {
-    showTipClearText()
+    clearSidebar()
     return
   }
 
