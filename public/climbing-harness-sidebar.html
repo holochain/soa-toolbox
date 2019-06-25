@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="https://realtimeboard.com/app/static/rtb.uikit.css">
+    <script src="https://realtimeboard.com/app/static/rtb.sdk.1.1.js"></script>
+
+    <style>
+        .rtb-sidebar-caption {
+            font-size: 14px;
+            font-weight: bold;
+            color: rgba(0, 0, 0, 0.7);
+            padding: 24px 0 20px 24px;
+        }
+        ul {
+        }
+        textarea {
+            display: block;
+            height: 25%;
+            margin: 20px 0 0 20px;
+            background-color: white;
+            border-radius: 4px;
+            border: .5;
+            width: calc(100% - 40px);
+            text-align: left;
+            font-size: 14px;
+        }
+        .tip {
+            color: #CCCCCC;
+            margin: 20px 0 0 26px;
+        }
+        .node {
+          margin: 20px 0 20px 10px;
+        }
+        .node-title {
+          display: block;
+          margin: 0 auto;
+          width: 100%;
+          text-align: center;
+        }
+        .nav-link {
+          cursor: pointer;
+        }
+        header {
+          margin-left: 10px;
+          font-weight: bold;
+          font-size: larger;
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="rtb-sidebar-caption">Climbing Harness</div>
+
+<header>Parents:</header>
+<ul id="parents">
+  <li class="nav-link" onclick="console.log('TEST!')">Test</li>
+  <li>Test 2</li>
+</ul>
+
+<div class="tip" id="tip">
+    Select a node to view its connections.
+</div>
+<div class="node" id="node">
+  <svg id="node-picture"></svg>
+  <br>
+  <span class="node-title" id="node-title"><span>
+</div>
+
+<header>Children:</header>
+<textarea id="children" readonly></textarea>
+
+<script src="climbing-harness-sidebar.js"></script>
+</body>
+</html>
