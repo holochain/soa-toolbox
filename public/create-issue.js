@@ -35,7 +35,6 @@ rtb.onReady(() => {
   <line x1="19.5" y1="6.5" x2="19.5" y2=17.5 stroke="hsl(90, 81%, 53%)" stroke-width="1"/>
   <line x1="20" y1="6.5" x2="20" y2=17.5 stroke="hsl(90, 81%, 53%)" stroke-width="1"/>
   <line x1="20.5" y1="6.5" x2="20.5" y2=17.5 stroke="hsl(90, 81%, 53%)" stroke-width="1"/>
-
   <circle cx="12" cy="12" r="10" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2.5"/>
   <line x1="12" y1="6" x2="12" y2="14" stroke="currentColor" stroke-width="2.5"/>
   <line x1="12" y1="15.5" x2="12" y2="18" stroke="currentColor" stroke-width="2.5"/>
@@ -47,7 +46,7 @@ rtb.onReady(() => {
         title: 'ᴀᴄᴏʀɴ: Create a GitHub issue for selected node', // note: gets turned to lowercase by Miro
         svgIcon: createIssueIcon,
         positionPriority: 2,
-        onClick: createIssueForSelected
+        onClick: activateModal
       }
     }
   })
@@ -67,6 +66,7 @@ function getTitleFromNode(root) {
   if (fullText.split(' ').length <= titleLength) {
     return fullText
   } else {
+    // add ... if the text is longer than 10 words
     return fullText.split(' ').slice(0,titleLength).join(' ') + "..."
   }
 }
@@ -74,33 +74,54 @@ function getTitleFromNode(root) {
 // calculate the issue body text from a node. This is the entire text plus a
 // link back to the node. Takes board info object because this has to be gotten
 // inside an async function.
-function getTextFromNode(root, boardInfo) {
+function getBodyFromNode(root, boardInfo) {
   var fullText = getFullTextFromNode(root)
+  // append link to node in Miro
   return fullText + '</br></br><a href="https://miro.com/app/board/'+boardInfo.id+'/?moveToWidget='+root.id+'">See card in SoA Tree</a>'
 }
 
-async function createIssueForSelected() {
+// return the URL that is typed in a config node in Miro
+async function getServerURL() {
+  let configBackgroundColor = "#CA59E2"
+  // find nodes with the right background color. Miro turns hex codes lowercase
+  var configNodes = await rtb.board.widgets.get({type: 'shape', style:{backgroundColor: configBackgroundColor.toLowerCase()}})
+  var configNode = configNodes[0]
+  var serverURL = configNode.text
+  // console.log(configNode)
+  // console.log(serverURL)
+  return serverURL
+}
+
+// check that the selection is valid and then activate the modal popup
+async function activateModal() {
   // gets the selected widgets on the board, returns an array
   let selection = await rtb.board.selection.get()
-
-  // gets the board info
-  let boardInfo = await rtb.board.info.get()
-
   // validate that we can proceed with the selected item
   if (!validateSelection(selection)) return
 
-  rtb.showNotification('Creating issue')
+  // prompt the user to choose the repo in which to create the issue
+  rtb.board.ui.openModal('create-issue-modal.html')
+}
 
-  // root is the widget that the issue is being created from
+// create and send an issue of the selected node to the specified repo
+async function createAndSendIssue(repoPath) {
+  // gets the selected widgets on the board, returns an array
+  let selection = await rtb.board.selection.get()
+  // gets the board info
+  let boardInfo = await rtb.board.info.get()
+
+  rtb.showNotification('Creating issue...')
+  console.log("creating issue to send to repo: " + repoPath)
+
   let root = selection[0]
 
   var title = getTitleFromNode(root)
-  var text = getTextFromNode(root, boardInfo)
+  var text = getBodyFromNode(root, boardInfo)
 
-  // create the issue
-  createIssue(title, text)
+  // send the issue to simpleserver.js to be sent to GitHub
+  sendIssue(title, text, repoPath)
 
-  rtb.showNotification('Successfully created issue')
+  rtb.showNotification(`Successfully created issue in repo: ${repoPath}`)
 }
 
 const uncertainRed = "#f24726"
@@ -109,28 +130,36 @@ const completeGreen = "#8fd14f"
 const smallGreen = "#0ca789"
 const timeTeal = "#12cdd4"
 
-const ACCESS_TOKEN = 'fakeaccesstokenfakeaccesstokenfakeaccesstoken'
-const REPO_OWNER = 'h-be'
-const REPO_NAME = 'phloem'
+// var variables = {}
+// function setVariable(attribute, value) {
+//   variables[attribute] = value
+// }
+//
+// function getVariable(attribute) {
+//   return variables[attribute]
+// }
+// variables["test"] = 104
 
-function createIssue(title, body, assignee = null, milestone = null, labels = null) {
+async function sendIssue(title, body, repoPath, assignee = null, labels = null) {
 
-  var url = 'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/issues'
+  var serverURL = await getServerURL()
+  var url = serverURL + "/create-issue"
 
   var xhr = new XMLHttpRequest()
   xhr.open('POST', url, true)
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-  xhr.setRequestHeader("Authorization", "BEARER " + ACCESS_TOKEN)
+  xhr.setRequestHeader("Content-type", "application/json")
 
   // set up the issue JSON with the desired information
-  var issue = JSON.stringify({
-    "title": title,
-    "body": body,
-    "labels": [
-      "acorn"
-    ]
-  })
+  var json = {
+    "issueRepoPath": repoPath,
+    "issueTitle": title,
+    "issueBody": body,
+    "issueLabels": [],
+    "issueAssignee": null
+  }
 
+  // convert issue JSON to string
+  var issue = JSON.stringify(json)
   // send issue
   xhr.send(issue)
 

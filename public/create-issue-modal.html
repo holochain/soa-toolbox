@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="https://miro.com/app/static/rtb.uikit.css">
+    <script src="https://miro.com/app/static/rtb.sdk.1.1.js"></script>
+    <script>
+    async function populateSelector(){
+      var serverURL = await getServerURL()
+      console.log(`server url: ${serverURL}`)
+      // get the list of repos from the server
+      fetch(serverURL + '/get-config-repos')
+        .then(resp => resp.json())
+        .then(repoList => {
+          console.log(`repo list: ${repoList}`)
+
+          var selector = document.getElementById('repo-selector')
+          console.log(`selector: ${selector}`)
+
+          repoList.forEach(function(repoPath, index) {
+            var option = document.createElement('option')
+            option.innerHTML = repoPath
+            option.value = repoPath
+            selector.appendChild(option)
+          })
+
+        }
+      )
+    }
+    </script>
+    <style>
+        .rtb-modal-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: rgba(0, 0, 0, 0.8);
+        }
+
+        .close-button {
+          position: absolute;
+          bottom: 10%;
+        }
+
+        body {
+          padding: 9% 10% 0;
+        }
+
+    </style>
+</head>
+
+<!-- wait a bit here to give time for the modal to load fully -->
+<body onload="setTimeout(populateSelector, 500)">
+<div id="test" class="rtb-modal-title">In which repo would you like to create this issue?</div>
+<br>
+
+<select id="repo-selector" autofocus>
+</select>
+
+&nbsp;&nbsp;<button onclick="
+createAndSendIssue(document.getElementById('repo-selector').value).then(_ => {
+  rtb.board.ui.closeModal()
+})
+">Create issue</button>
+
+<br><br><br>
+
+<button class="close-button" onclick="rtb.board.ui.closeModal()">Cancel</button>
+
+<script src="create-issue.js"></script>
+
+</body>
+</html>

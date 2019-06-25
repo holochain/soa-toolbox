@@ -2,6 +2,8 @@ var express = require('express')
 var cors = require('cors')
 var serveStatic = require('serve-static')
 var app = express()
+const config = require('./config.json')
+const request = require('request');
 
 let threeData = {
   nodes: [],
@@ -16,11 +18,52 @@ app.use(express.json({limit: '50mb'}))
 
 // necessary CORS headers
 app.use(cors({
-    origin: 'https://realtimeboard.com'
+    origin: 'https://miro.com'
 }))
 
 // static file server
 app.use(serveStatic('public'))
+
+// send out issue information to GitHub API
+app.post('/create-issue', function (req, res) {
+  // console.log(`REQ: ${req}`)
+  // req should contain information about the issue (title, body, labels), and
+  // the repo it should be created in
+  var url = 'https://api.github.com/repos/' + req.body.issueRepoPath + '/issues'
+  // add acorn to the other labels
+  req.body.issueLabels.push("acorn")
+
+  // set up the issue JSON with the desired information
+  var issue = {
+    "title": req.body.issueTitle,
+    "body": req.body.issueBody,
+    "labels": req.body.issueLabels
+  }
+
+  request({
+    url:url,
+    method:"POST",
+    json: true,
+    body: issue,
+    headers:  {
+      'Authorization': 'Bearer ' + config.repos[req.body.issueRepoPath].accessToken,  // look up access token
+      'Content-Type': 'application/json', 
+      'User-Agent': 'soa-toolbox-server' FIXME
+    }
+  }, function (err, res, body) {
+  // console.log(`RES: ${res}`)
+  })
+
+})
+
+// share the list of repos from config file with Miro so we can display them in the modal pop-up
+app.get('/get-config-repos', function (req, res) {
+  // extract repo names from config file
+  var repos = Object.keys(config.repos)
+  // console.log(repos)
+  res.send(repos)
+})
+
 
 app.get('/get-3d-data', function (req, res) {
   res.send(threeData)
