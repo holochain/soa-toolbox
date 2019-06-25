@@ -48,7 +48,7 @@ app.post('/create-issue', function (req, res) {
     headers:  {
       'Authorization': 'Bearer ' + config.repos[req.body.issueRepoPath].accessToken,  // look up access token
       'Content-Type': 'application/json', 
-      'User-Agent': 'soa-toolbox-server' FIXME
+      'User-Agent': 'soa-toolbox-server'
     }
   }, function (err, res, body) {
   // console.log(`RES: ${res}`)
