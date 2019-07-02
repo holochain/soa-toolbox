@@ -1,13 +1,8 @@
 rtb.onReady(() => {
   // subscribe on user selected widgets
-  rtb.addListener(rtb.enums.event.SELECTION_UPDATED, updateSidebarWrapper)
+  rtb.addListener(rtb.enums.event.SELECTION_UPDATED, updateSidebar)
   updateSidebar()
 })
-
-function updateSidebarWrapper() {
-  updateSidebar()
-  console.log("calling updateSidebar from selection update listener!")
-}
 
 // get the entire text of a node without any of the characters phloem adds
 function getFullTextFromNode(node) {
@@ -100,7 +95,12 @@ const nodeTitleElement = nodeElement.children['node-title']
 const parentListElement = document.getElementById('parent-list')
 const childListElement = document.getElementById('child-list')
 
-async function updateSidebar() {
+// the function called each time the selection changes
+async function updateSidebar(trigger = {data: ["go"]}) {
+  // don't do anything if the lisntener was triggered by an unresolved promise
+  if (trigger.data[0] == undefined) {
+    return
+  }
   console.log("updateSidebar WAS RUN!")
   // hide tip and show node in sidebar
   // requires title to be defined
@@ -124,7 +124,7 @@ async function updateSidebar() {
       list = l[entry][0]
       element = l[entry][1]
 
-      //////
+      ////// FIXME: is there a better way to do this?
       for (var key in list) {
         let title = list[key][0]
         let fullText = list[key][1]
