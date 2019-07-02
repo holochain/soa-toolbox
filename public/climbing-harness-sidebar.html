@@ -6,13 +6,15 @@
     <script src="https://realtimeboard.com/app/static/rtb.sdk.1.1.js"></script>
 
     <style>
+        .scrollable-container {
+            height: 100%;
+            overflow-y: auto;
+        }
         .rtb-sidebar-caption {
             font-size: 14px;
             font-weight: bold;
             color: rgba(0, 0, 0, 0.7);
             padding: 24px 0 20px 24px;
-        }
-        ul {
         }
         textarea {
             display: block;
@@ -38,8 +40,29 @@
           width: 100%;
           text-align: center;
         }
+        ul {
+          padding-left: 8%;
+        }
+        li {
+          margin: 2px 5% 2px 0;
+          padding: 2px 5px;
+        }
         .nav-link {
           cursor: pointer;
+          font-weight: 500;
+          border: 1px solid black;
+        }
+        .uncertain {
+          background-color: #f24726;
+        }
+        .small {
+          border: 3px solid #0ca789;
+        }
+        .incomplete {
+          background-color: #fac710;
+        }
+        .complete {
+          background-color: #8fd14f;
         }
         header {
           margin-left: 10px;
@@ -51,10 +74,11 @@
 </head>
 
 <body>
+<div class="scrollable-container">
 <div class="rtb-sidebar-caption">Climbing Harness</div>
 
 <header>Parents:</header>
-<ul id="parents">
+<ul id="parent-list">
   <li class="nav-link" onclick="console.log('TEST!')">Test</li>
   <li>Test 2</li>
 </ul>
@@ -69,8 +93,9 @@
 </div>
 
 <header>Children:</header>
-<textarea id="children" readonly></textarea>
+<ul id="child-list"></ul>
 
 <script src="climbing-harness-sidebar.js"></script>
+</div>
 </body>
 </html>
