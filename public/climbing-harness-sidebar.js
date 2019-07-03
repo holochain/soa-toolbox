@@ -181,7 +181,7 @@ async function updateSidebar(trigger = {data: ["go"]}) {
       })
     return childNodes
   }
-  function getParentNodes(node) { // FIXME refactor?
+  function getParentNodes(node) { // FIXME refactor
     var edges = allObjects.filter(i => i.type === 'LINE')
     let parentNodes = []
     let parentEdges = edges.filter(l => l.startWidgetId === node.id)
