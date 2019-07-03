@@ -1,0 +1,67 @@
+.scrollable-container {
+  overflow-y: auto;
+  position: absolute;
+  bottom: 0;
+  top: 63.5px;
+  padding-right: 5%;
+}
+.rtb-sidebar-caption {
+  font-size: 14px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.7);
+  padding: 24px 0 20px 24px;
+}
+textarea {
+  display: block;
+  height: 25%;
+  margin: 20px 0 0 20px;
+  background-color: white;
+  border-radius: 4px;
+  border: .5;
+  width: calc(100% - 40px);
+  text-align: left;
+  font-size: 14px;
+}
+.tip {
+  color: #CCCCCC;
+  margin: 20px 0 0 26px;
+}
+.node {
+  margin: 20px 0 20px 10px;
+}
+.node-title {
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+}
+ul {
+  padding-left: 5%;
+}
+li {
+  list-style: none;
+  margin: 2px 0 2px 0;
+  padding: 2px 5px;
+}
+.nav-link {
+  cursor: pointer;
+  font-weight: 500;
+  border: 1px solid black;
+}
+.uncertain {
+  background-color: #f24726;
+}
+.small {
+  border: 3px solid #0ca789;
+}
+.incomplete {
+  background-color: #fac710;
+}
+.complete {
+  background-color: #8fd14f;
+}
+header {
+  margin-left: 10px;
+  font-weight: bold;
+  font-size: larger;
+}
