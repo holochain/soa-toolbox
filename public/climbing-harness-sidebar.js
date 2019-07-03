@@ -1,6 +1,7 @@
 rtb.onReady(() => {
   // subscribe on user selected widgets
   rtb.addListener(rtb.enums.event.SELECTION_UPDATED, updateSidebar)
+  // update the sidebar once when it first opens
   updateSidebar()
 })
 
@@ -34,6 +35,9 @@ function getTitleFromNode(node) {
 
 // returns a hash of the ID and short and long text of each node in the given array.
 // Example: { 84759034802: ['This is...', 'This is a test node.'], 9879: ['Another...', 'Another one.'] }
+// later we use this hash to build the list of the parent and children nodes.
+// The title is required to display in the box, and the id is required so that
+// we can zoom the viewport to that node onclick.
 function makeNodeList(nodeArray) {
   nodeList = {}
   // console.log("nodearray:")
@@ -41,68 +45,84 @@ function makeNodeList(nodeArray) {
   nodeArray.forEach(node => {
     if (node == undefined) {
       return
-    } else {
-      nodeList[node.id] = [getTitleFromNode(node), getFullTextFromNode(node)]
     }
+    nodeList[node.id] = [getTitleFromNode(node), getFullTextFromNode(node)]
   })
   return nodeList
 }
 
+// remove all items from both lists
 function clearLists() {
   while (parentListElement.firstChild) {
     parentListElement.removeChild(parentListElement.firstChild)
   }
-  while (childListElement.firstChild) { // FIXME refactor
+  while (childListElement.firstChild) { // refactor?
     childListElement.removeChild(childListElement.firstChild)
   }
 }
 
+// do this when a list item is clicked on
 async function doOnclick(id) {
+  // clear both clicks so the sidebar is empty when the viewport is animating
   clearLists()
-  // console.log(await rtb.board.viewport.getZoom())
-  let zoom = await rtb.board.viewport.getZoom()
-  await rtb.board.viewport.setZoom(zoom * .60)
-  console.log("SELECTION ABOUT TO BE SET BY ONCLICK FUNCTION!")
-  selected = await rtb.board.selection.selectWidgets(id)
-  console.log("selected widgets:")
-  console.log(selected)
+  let zoom = await rtb.board.viewport.getZoom()  // store current zoom level
+  await rtb.board.viewport.setZoom(zoom * .60)  // zoom out just a bit
+  await rtb.board.selection.selectWidgets(id) // then select the current widget
 }
+
+// when a list item is moused over, zoom to that widget after a quick pause
 function doOnMouseover(id) {
-  rtb.board.viewport.zoomToObject(id)
+  let delayBeforeZoom = 250
+
+  function zoom() {
+    rtb.board.viewport.zoomToObject(id)
+  }
+
+  timer = window.setTimeout(zoom, delayBeforeZoom)
 }
+// when the mouse goes off, return to the viewport we saved when updateSidebar
+// was called (usually when the node was selected)
 function doOnMouseout(id) {
   rtb.board.viewport.setViewportWithAnimation(viewport)
+  window.clearTimeout(timer)
 }
 
-async function getViewport() {
-  let viewport = await rtb.board.viewport.getViewport()
-  return viewport
-}
-
-// generates a style string from the given node
-// should have in the sidebar so they show up the right color
+// returns the style object of the element with the given ID so the list item in
+// the sidebar can match its background color, font weight, border color, and
+// border width.
 async function getNodeStyle(id) {
-  let ns = await rtb.board.widgets.get({id: id})
-  let n = ns[0]
-
-  return n.style
+  let nodes = await rtb.board.widgets.get({id: id})
+  let node = nodes[0] // there can only be one node with a given ID
+  return node.style
 }
 
-// Get html elements for tip and text container
+// Get html elements for tip and lists
 const tipElement = document.getElementById('tip')
 const nodeElement = document.getElementById('node')
 const nodeTitleElement = nodeElement.children['node-title']
 const parentListElement = document.getElementById('parent-list')
 const childListElement = document.getElementById('child-list')
 
-// the function called each time the selection changes
+// called each time the selection changes.
+// Takes 1 param: the triggering event which is sneakily passed in by the
+// listener. We check this event to make sure it has data because the listener
+// can be triggered by unresolved promises, which we want to ignore. trigger
+// defaults to a fake event with data so that if the function is called with no
+// parameters, it runs.
 async function updateSidebar(trigger = {data: ["go"]}) {
+
+  // clear sidebar every time selection is updates so we don't build up more and
+  // more list items
+  clearSidebar()
+
   // don't do anything if the lisntener was triggered by an unresolved promise
   if (trigger.data[0] == undefined) {
+    console.log("Sidebar update without data! Stopping!")
     return
   }
-  console.log("updateSidebar WAS RUN!")
-  // hide tip and show node in sidebar
+
+  ///// //// /// // / FUNCTIONS / // /// //// /////
+  // hide tip and show current node in sidebar
   // requires title to be defined
   function hideTipShowText() {
     tipElement.style.opacity = '0'
@@ -116,28 +136,27 @@ async function updateSidebar(trigger = {data: ["go"]}) {
     nodeTitleElement.textContent = '&nbsp;'
     clearLists()
   }
-  async function updateLists(parentList, childList) {
-    l = {1: [parentList, parentListElement], 2: [childList, childListElement]}
-    //console.log(l)
-    // do the updating list process once for parents and once for children
-    for (var entry in l) {
-      list = l[entry][0]
-      element = l[entry][1]
 
-      ////// FIXME: is there a better way to do this?
+  async function updateLists(parentList, childList) {
+    // update the list of each relation (parents/children)
+    [[parentList,parentListElement], [childList,childListElement]].forEach(async relation => {
+      var list = relation[0]
+      var element = relation[1]
+
+      // generate list items from the list of relations
       for (var key in list) {
+        // for each key, get the title and id
         let title = list[key][0]
-        let fullText = list[key][1]
         let id = key
 
-        var o = document.createElement('li')
+        var o = document.createElement('li') // create the new element 'o'
         o.classList.add("nav-link")
-        // o.title = fullText
         o.onclick = function() { doOnclick(id) }
         o.onmouseover = function() { doOnMouseover(id) }
         o.onmouseout = function() { doOnMouseout(id) }
-        o.appendChild(document.createTextNode(title))
+        o.appendChild(document.createTextNode(title)) // label with node title
 
+        // give the list item style to match the node
         let nodeStyle = await getNodeStyle(id)
         o.style.backgroundColor = nodeStyle.backgroundColor
         o.style.borderColor = nodeStyle.borderColor
@@ -145,12 +164,11 @@ async function updateSidebar(trigger = {data: ["go"]}) {
         o.style.color = nodeStyle.textColor
         o.style.fontWeight = nodeStyle.bold == 1 ? "bold" : "inherit"
 
-        element.appendChild(o)
+        element.appendChild(o) // append the list item to the correct element
       }
-      //////
-
-    }
+    })
   }
+
   function getChildNodes(node) {
     // filter for the edges where the node of interest
     // is the 'endWidgetId', meaning it is the parent, and the 'startWidgetId' is the child
@@ -164,8 +182,6 @@ async function updateSidebar(trigger = {data: ["go"]}) {
     return childNodes
   }
   function getParentNodes(node) { // FIXME refactor?
-    // filter for the edges where the node of interest
-    // is the 'startWidgetId', meaning it is the child, and the 'endWidgetId' is the parent
     var edges = allObjects.filter(i => i.type === 'LINE')
     let parentNodes = []
     let parentEdges = edges.filter(l => l.startWidgetId === node.id)
@@ -175,8 +191,7 @@ async function updateSidebar(trigger = {data: ["go"]}) {
       })
     return parentNodes
   }
-
-  clearSidebar()
+  ///// //// /// // / END FUNCTIONS / // /// //// /////
 
   // Get selected widgets
   let widgets = await rtb.board.selection.get()
@@ -184,29 +199,28 @@ async function updateSidebar(trigger = {data: ["go"]}) {
   if (widgets[0] == undefined) {
     return
   }
-
   // Get first widget from selected widgets
   var widget = widgets[0]
+
   var text = widget.text
   var type = widget.type
 
   // Check that widget is a valid node with a title. If it's not, stop.
   if (typeof text !== 'string' || type != "SHAPE") {
-    console.log("valid node must be selected!")
+    console.log("Valid node must be selected!")
     return
   }
 
+  // set up variables that updateLists implicitly needs
   var title = getTitleFromNode(widgets[0])
   var allObjects = await rtb.board.getAllObjects()
-  hideTipShowText()
-
-  parentNodeList = makeNodeList(getParentNodes(widget))
-  childNodeList = makeNodeList(getChildNodes(widget))
-  console.log(`parentNodeList:`)
-  console.log(parentNodeList)
-  console.log(`childNodeList:`)
-  console.log(childNodeList)
   viewport = await rtb.board.viewport.getViewport()
-  console.log("Updating Lists!")
+  var timer
+
+  // set up updateList parameters
+  var parentNodeList = makeNodeList(getParentNodes(widget))
+  var childNodeList = makeNodeList(getChildNodes(widget))
+
+  hideTipShowText() // show current node text
   updateLists(parentNodeList, childNodeList)
 }
