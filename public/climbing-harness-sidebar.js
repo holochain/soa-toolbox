@@ -63,28 +63,38 @@ function clearLists() {
 
 // do this when a list item is clicked on
 async function doOnclick(id) {
-  // clear both clicks so the sidebar is empty when the viewport is animating
+  // clear both lists so the sidebar is empty when the viewport is animating
   clearLists()
-  let zoom = await rtb.board.viewport.getZoom()  // store current zoom level
-  await rtb.board.viewport.setZoom(zoom * .60)  // zoom out just a bit
+  let zoomLevel = await rtb.board.viewport.getZoom()  // store current zoom level
+  await rtb.board.viewport.setZoom(zoomLevel * 1.10)  // zoom in just a bit
   await rtb.board.selection.selectWidgets(id) // then select the current widget
 }
 
 // when a list item is moused over, zoom to that widget after a quick pause
 function doOnMouseover(id) {
-  let delayBeforeZoom = 250
+  let delayBeforePreviewZoom = 250
+  let delayBeforeShowContextZoom = 600
+  let showContextZoomFactor = .30
 
-  function zoom() {
+  function previewZoom() {
+
+    async function showContextZoom() {
+      let zoomLevel = await rtb.board.viewport.getZoom()
+      await rtb.board.viewport.setZoom(zoomLevel * showContextZoomFactor)
+    }
+
     rtb.board.viewport.zoomToObject(id)
+    showContextZoomTimer = window.setTimeout(showContextZoom, delayBeforeShowContextZoom)
   }
 
-  timer = window.setTimeout(zoom, delayBeforeZoom)
+  previewZoomTimer = window.setTimeout(previewZoom, delayBeforePreviewZoom)
 }
 // when the mouse goes off, return to the viewport we saved when updateSidebar
 // was called (usually when the node was selected)
 function doOnMouseout(id) {
   rtb.board.viewport.setViewportWithAnimation(viewport)
-  window.clearTimeout(timer)
+  window.clearTimeout(showContextZoomTimer)
+  window.clearTimeout(previewZoomTimer)
 }
 
 // returns the style object of the element with the given ID so the list item in
@@ -215,7 +225,8 @@ async function updateSidebar(trigger = {data: ["go"]}) {
   var title = getTitleFromNode(widgets[0])
   var allObjects = await rtb.board.getAllObjects()
   viewport = await rtb.board.viewport.getViewport()
-  var timer
+  var showContextZoomTimer
+  var previewZoomTimer
 
   // set up updateList parameters
   var parentNodeList = makeNodeList(getParentNodes(widget))
