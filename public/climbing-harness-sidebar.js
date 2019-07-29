@@ -108,6 +108,12 @@ async function getNodeStyle(id) {
   return node.style
 }
 
+async function getNodeX(id) {
+  let nodes = await rtb.board.widgets.get({id: id})
+  let node = nodes[0] // there can only be one node with a given ID
+  return node.x
+}
+
 // Get html elements for tip and lists
 const tipElement = document.getElementById('tip')
 const nodeElement = document.getElementById('node')
@@ -155,20 +161,21 @@ async function updateSidebar(trigger = {data: ["go"]}) {
       var list = relation[0]
       var element = relation[1]
 
-      // generate list items from the list of relations
+      // generate a list of html li elements from the list of relations
+      var elementList = []
       for (var key in list) {
         // for each key, get the title and id
         let title = list[key][0]
         let id = key
 
-        var o = document.createElement('li') // create the new element 'o'
+        var o = document.createElement('li') // create the new html element 'o'
         o.classList.add("nav-link")
         o.onclick = function() { doOnclick(id) }
         o.onmouseover = function() { doOnMouseover(id) }
         o.onmouseout = function() { doOnMouseout(id) }
         o.appendChild(document.createTextNode(title)) // label with node title
 
-        // give the list item style to match the node
+        // give the element style to match the node it corresponds to
         let nodeStyle = await getNodeStyle(id)
         o.style.backgroundColor = nodeStyle.backgroundColor
         o.style.borderColor = nodeStyle.borderColor
@@ -176,8 +183,18 @@ async function updateSidebar(trigger = {data: ["go"]}) {
         o.style.color = nodeStyle.textColor
         o.style.fontWeight = nodeStyle.bold == 1 ? "bold" : "inherit"
 
-        element.appendChild(o) // append the list item to the correct element
+        // store the node's x coordinate as data-* attribute on the html element
+        let nodeX = await getNodeX(id)
+        o["data-x"] = nodeX
+
+        elementList.push(o) // append the li element to the list
       }
+
+      // sort the list of li elements by x coordinate
+      elementList.sort((a, b) => a["data-x"] - b["data-x"])
+
+      // append all the elements to the correct parent element (a ul) in order
+      elementList.forEach(o => element.appendChild(o))
     })
   }
 
