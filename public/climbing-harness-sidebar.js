@@ -61,7 +61,7 @@ function clearLists() {
   }
 }
 
-// do this when a list item is clicked on
+// zoom out a bit and select the node when a list item is clicked on
 async function doOnclick(id) {
   // clear both lists so the sidebar is empty when the viewport is animating
   clearLists()
@@ -69,28 +69,30 @@ async function doOnclick(id) {
   await rtb.board.viewport.setZoom(zoomLevel * 1.10)  // zoom in just a bit
   await rtb.board.selection.selectWidgets(id) // then select the current widget
 }
-
-// when a list item is moused over, zoom to that widget after a quick pause
+// when a list item is moused over, zoom to that widget after a quick pause.
+// once looking at it, zoom out a bunch to show the context (where in the tree)
+// the node is.
 function doOnMouseover(id) {
+  // delay between mousing over a list item and zooming over to preview it (ms)
   let delayBeforePreviewZoom = 250
+  // delay between starting to zoom to a widget and zooming out for context (ms)
   let delayBeforeShowContextZoom = 600
+  // how much to zoom out to show context
   let showContextZoomFactor = .30
 
   function previewZoom() {
-
     async function showContextZoom() {
       let zoomLevel = await rtb.board.viewport.getZoom()
       await rtb.board.viewport.setZoom(zoomLevel * showContextZoomFactor)
     }
-
     rtb.board.viewport.zoomToObject(id)
     showContextZoomTimer = window.setTimeout(showContextZoom, delayBeforeShowContextZoom)
   }
 
   previewZoomTimer = window.setTimeout(previewZoom, delayBeforePreviewZoom)
 }
-// when the mouse goes off, return to the viewport we saved when updateSidebar
-// was called (usually when the node was selected)
+// when the mouse stops hovering over a list item, return to the viewport we
+// saved when updateSidebar was called (usually when the node was selected)
 function doOnMouseout(id) {
   rtb.board.viewport.setViewportWithAnimation(viewport)
   window.clearTimeout(showContextZoomTimer)
