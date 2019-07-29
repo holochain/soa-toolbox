@@ -41,13 +41,13 @@ const timeTeal = "#12cdd4"
 function validateSelection(selection) {
   // validate only one selection
   if (selection.length > 1) {
-    rtb.showNotification('You must only have one node selected')
+    rtb.showErrorNotification('You must only have one node selected')
     return false
   } else if (selection.length === 0) {
-    rtb.showNotification('You must have at least one node selected')
+    rtb.showErrorNotification('You must have at least one node selected')
     return false
   } else if (selection[0].type !== "SHAPE") {
-    rtb.showNotification('The selected element must be a node')
+    rtb.showErrorNotification('The selected element must be a node')
     return false
   } else {
     return true
