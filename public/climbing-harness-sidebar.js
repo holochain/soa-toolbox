@@ -134,8 +134,9 @@ async function updateSidebar(trigger = {data: ["go"]}) {
   clearSidebar()
 
   // don't do anything if the lisntener was triggered by an unresolved promise
+  // this happens when deselecting
   if (trigger.data[0] == undefined) {
-    console.log("Sidebar update without data! Stopping!")
+    console.log("Sidebar update without data!")
     return
   }
 
@@ -206,6 +207,10 @@ async function updateSidebar(trigger = {data: ["go"]}) {
     let childrenEdges = edges.filter(l => l.endWidgetId === node.id)
     childrenEdges.forEach(edge => {
         let childNode = allObjects.find(o => o.id === edge.startWidgetId)
+        // only add valid nodes to the list
+        if (typeof childNode.text !== 'string' || childNode.type != "SHAPE") {
+          return
+        }
         childNodes.push(childNode)
       })
     return childNodes
@@ -216,6 +221,9 @@ async function updateSidebar(trigger = {data: ["go"]}) {
     let parentEdges = edges.filter(l => l.startWidgetId === node.id)
     parentEdges.forEach(edge => {
         let parentNode = allObjects.find(o => o.id === edge.endWidgetId)
+        if (typeof parentNode.text !== 'string' || parentNode.type != "SHAPE") {
+          return
+        }
         parentNodes.push(parentNode)
       })
     return parentNodes
