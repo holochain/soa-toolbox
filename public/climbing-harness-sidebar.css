@@ -48,18 +48,6 @@ li {
   font-weight: 500;
   border: 1px solid black;
 }
-.uncertain {
-  background-color: #f24726;
-}
-.small {
-  border: 3px solid #0ca789;
-}
-.incomplete {
-  background-color: #fac710;
-}
-.complete {
-  background-color: #8fd14f;
-}
 header {
   margin-left: 10px;
   font-weight: bold;
