@@ -12,7 +12,7 @@ function getFullTextFromNode(node) {
 
 // calculate the issue title from a node's text
 function getTitleFromNode(node) {
-  let titleLength = 13
+  const titleLength = 13
 
   var fullText = getFullTextFromNode(node)
 
@@ -71,11 +71,11 @@ async function doOnclick(id) {
 // the node is.
 function doOnMouseover(id) {
   // delay between mousing over a list item and zooming over to preview it (ms)
-  let delayBeforePreviewZoom = 250
+  const delayBeforePreviewZoom = 250
   // delay between starting to zoom to a widget and zooming out for context (ms)
-  let delayBeforeShowContextZoom = 600
+  const delayBeforeShowContextZoom = 600
   // how much to zoom out to show context
-  let showContextZoomFactor = .30
+  const showContextZoomFactor = .30
 
   function previewZoom() {
     async function showContextZoom() {
