@@ -192,7 +192,7 @@ async function updateSidebar(trigger = {data: ["go"]}) {
 
   // walk the tree recursively to generate a list of all leaf nodes
   // then filter the list by background color to delete all complete nodes
-  function getActionableNodes(node) {
+  function getAllLeafNodes(node) {
     // get children of given node:
     // filter for the edges where the node of interest is the 'endWidgetId',
     // meaning it is the parent, and the 'startWidgetId' is the child
@@ -225,6 +225,17 @@ async function updateSidebar(trigger = {data: ["go"]}) {
       })
       return out
     }
+  }
+
+  // filter for nodes that aren't complete or purple
+  function getActionableNodes(node) {
+    const unactionableColors = ['#8fd14f', '#9510ac']
+
+    leaves = getAllLeafNodes(node)
+    return leaves.filter(l => {
+      b = l.style.backgroundColor
+      return !unactionableColors.includes(b)
+    })
   }
   ///// //// /// // / END FUNCTIONS / // /// //// /////
 
