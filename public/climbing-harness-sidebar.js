@@ -133,7 +133,7 @@ async function updateSidebar(trigger = {data: ["go"]}) {
   // more list items
   clearSidebar()
 
-  // don't do anything if the lisntener was triggered by an unresolved promise
+  // don't do anything if the listener was triggered by an unresolved promise
   // this happens when deselecting
   if (trigger.data[0] == undefined) {
     console.log("Sidebar update without data!")
