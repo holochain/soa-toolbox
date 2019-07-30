@@ -12,7 +12,7 @@ function getFullTextFromNode(node) {
 
 // calculate the issue title from a node's text
 function getTitleFromNode(node) {
-  let titleLength = 13
+  const titleLength = 13
 
   var fullText = getFullTextFromNode(node)
 
@@ -51,20 +51,17 @@ function makeNodeList(nodeArray) {
   return nodeList
 }
 
-// remove all items from both lists
-function clearLists() {
-  while (parentListElement.firstChild) {
-    parentListElement.removeChild(parentListElement.firstChild)
-  }
-  while (childListElement.firstChild) { // refactor?
-    childListElement.removeChild(childListElement.firstChild)
+// remove all items from the lists
+function clearList() {
+  while (listElement.firstChild) {
+    listElement.removeChild(listElement.firstChild)
   }
 }
 
 // zoom out a bit and select the node when a list item is clicked on
 async function doOnclick(id) {
   // clear both lists so the sidebar is empty when the viewport is animating
-  clearLists()
+  clearList()
   let zoomLevel = await rtb.board.viewport.getZoom()  // store current zoom level
   await rtb.board.viewport.setZoom(zoomLevel * 1.10)  // zoom in just a bit
   await rtb.board.selection.selectWidgets(id) // then select the current widget
@@ -74,11 +71,11 @@ async function doOnclick(id) {
 // the node is.
 function doOnMouseover(id) {
   // delay between mousing over a list item and zooming over to preview it (ms)
-  let delayBeforePreviewZoom = 250
+  const delayBeforePreviewZoom = 250
   // delay between starting to zoom to a widget and zooming out for context (ms)
-  let delayBeforeShowContextZoom = 600
+  const delayBeforeShowContextZoom = 600
   // how much to zoom out to show context
-  let showContextZoomFactor = .30
+  const showContextZoomFactor = .30
 
   function previewZoom() {
     async function showContextZoom() {
@@ -116,10 +113,8 @@ async function getNodeX(id) {
 
 // Get html elements for tip and lists
 const tipElement = document.getElementById('tip')
-const nodeElement = document.getElementById('node')
-const nodeTitleElement = nodeElement.children['node-title']
-const parentListElement = document.getElementById('parent-list')
-const childListElement = document.getElementById('child-list')
+const listElement = document.getElementById('list')
+const nodeTitleElement = document.getElementById('node-title')
 
 // called each time the selection changes.
 // Takes 1 param: the triggering event which is sneakily passed in by the
@@ -145,63 +140,62 @@ async function updateSidebar(trigger = {data: ["go"]}) {
   // requires title to be defined
   function hideTipShowText() {
     tipElement.style.opacity = '0'
-    nodeElement.style.opacity = '1'
+    nodeTitleElement.style.opacity = '1'
     nodeTitleElement.textContent = title
   }
   // show tip, clear node title, and clear parents/children
   function clearSidebar() {
     tipElement.style.opacity = '1'
-    nodeElement.style.opacity = '0'
-    nodeTitleElement.textContent = '&nbsp;'
-    clearLists()
+    nodeTitleElement.style.opacity = '0'
+    nodeTitleElement.textContent = '-'
+    clearList()
   }
 
-  async function updateLists(parentList, childList) {
+  async function updateList(list) {
     // update the list of each relation (parents/children)
-    [[parentList,parentListElement], [childList,childListElement]].forEach(async relation => {
-      var list = relation[0]
-      var element = relation[1]
 
-      // generate a list of html li elements from the list of relations
-      var elementList = []
-      for (var key in list) {
-        // for each key, get the title and id
-        let title = list[key][0]
-        let id = key
+    // generate a list of html li elements from the list of relations
+    var elementList = []
+    for (var key in list) {
+      // for each key, get the title and id
+      let title = list[key][0]
+      let id = key
 
-        var o = document.createElement('li') // create the new html element 'o'
-        o.classList.add("nav-link")
-        o.onclick = function() { doOnclick(id) }
-        o.onmouseover = function() { doOnMouseover(id) }
-        o.onmouseout = function() { doOnMouseout(id) }
-        o.appendChild(document.createTextNode(title)) // label with node title
+      var o = document.createElement('li') // create the new html element 'o'
+      o.classList.add("nav-link")
+      o.onclick = function() { doOnclick(id) }
+      o.onmouseover = function() { doOnMouseover(id) }
+      o.onmouseout = function() { doOnMouseout(id) }
+      o.appendChild(document.createTextNode(title)) // label with node title
 
-        // give the element style to match the node it corresponds to
-        let nodeStyle = await getNodeStyle(id)
-        o.style.backgroundColor = nodeStyle.backgroundColor
-        o.style.borderColor = nodeStyle.borderColor
-        o.style.borderWidth = nodeStyle.borderWidth / 2 + "px"
-        o.style.color = nodeStyle.textColor
-        o.style.fontWeight = nodeStyle.bold == 1 ? "bold" : "inherit"
+      // give the element style to match the node it corresponds to
+      let nodeStyle = await getNodeStyle(id)
+      o.style.backgroundColor = nodeStyle.backgroundColor
+      o.style.borderColor = nodeStyle.borderColor
+      o.style.borderWidth = nodeStyle.borderWidth / 2 + "px"
+      o.style.color = nodeStyle.textColor
+      o.style.fontWeight = nodeStyle.bold == 1 ? "bold" : "inherit"
 
-        // store the node's x coordinate as data-* attribute on the html element
-        let nodeX = await getNodeX(id)
-        o["data-x"] = nodeX
+      // store the node's x coordinate as data-* attribute on the html element
+      let nodeX = await getNodeX(id)
+      o["data-x"] = nodeX
 
-        elementList.push(o) // append the li element to the list
-      }
+      elementList.push(o) // append the li element to the list
+    }
 
-      // sort the list of li elements by x coordinate
-      elementList.sort((a, b) => a["data-x"] - b["data-x"])
+    // sort the list of li elements by x coordinate
+    elementList.sort((a, b) => a["data-x"] - b["data-x"])
 
-      // append all the elements to the correct parent element (a ul) in order
-      elementList.forEach(o => element.appendChild(o))
-    })
+    // append all the elements to the correct parent element (a ul) in order
+    elementList.forEach(o => listElement.appendChild(o))
   }
 
-  function getChildNodes(node) {
-    // filter for the edges where the node of interest
-    // is the 'endWidgetId', meaning it is the parent, and the 'startWidgetId' is the child
+  // walk the tree recursively to generate a list of all leaf nodes
+  // then filter the list by background color to delete all complete nodes
+  function getAllLeafNodes(node) {
+    // get children of given node:
+    // filter for the edges where the node of interest is the 'endWidgetId',
+    // meaning it is the parent, and the 'startWidgetId' is the child
     var edges = allObjects.filter(i => i.type === 'LINE')
     let childNodes = []
     let childrenEdges = edges.filter(l => l.endWidgetId === node.id)
@@ -213,20 +207,35 @@ async function updateSidebar(trigger = {data: ["go"]}) {
         }
         childNodes.push(childNode)
       })
-    return childNodes
-  }
-  function getParentNodes(node) { // FIXME refactor
-    var edges = allObjects.filter(i => i.type === 'LINE')
-    let parentNodes = []
-    let parentEdges = edges.filter(l => l.startWidgetId === node.id)
-    parentEdges.forEach(edge => {
-        let parentNode = allObjects.find(o => o.id === edge.endWidgetId)
-        if (typeof parentNode.text !== 'string' || parentNode.type != "SHAPE") {
-          return
-        }
-        parentNodes.push(parentNode)
+
+    // if the node has no children, it's a leaf so return it
+    if (childNodes.length == 0) {
+      return [node]
+    } else {
+      // otherwise the node has children, so recurse:
+      // return an array of the result of this function run on all the children
+      // nodes
+      let out = []
+      childNodes.forEach(c => {
+        // RECURSIVE STEP!
+        // for each child node, recurse
+        subChildren = getActionableNodes(c)
+        // and combine the results into one array
+        out = out.concat(subChildren)
       })
-    return parentNodes
+      return out
+    }
+  }
+
+  // filter for nodes that aren't complete or purple
+  function getActionableNodes(node) {
+    const unactionableColors = ['#8fd14f', '#9510ac']
+
+    leaves = getAllLeafNodes(node)
+    return leaves.filter(l => {
+      b = l.style.backgroundColor
+      return !unactionableColors.includes(b)
+    })
   }
   ///// //// /// // / END FUNCTIONS / // /// //// /////
 
@@ -248,7 +257,7 @@ async function updateSidebar(trigger = {data: ["go"]}) {
     return
   }
 
-  // set up variables that updateLists implicitly needs
+  // set up variables that updateList implicitly needs
   var title = getTitleFromNode(widgets[0])
   var allObjects = await rtb.board.getAllObjects()
   viewport = await rtb.board.viewport.getViewport()
@@ -256,9 +265,8 @@ async function updateSidebar(trigger = {data: ["go"]}) {
   var previewZoomTimer
 
   // set up updateList parameters
-  var parentNodeList = makeNodeList(getParentNodes(widget))
-  var childNodeList = makeNodeList(getChildNodes(widget))
+  var nodeList = makeNodeList(getActionableNodes(widget))
 
   hideTipShowText() // show current node text
-  updateLists(parentNodeList, childNodeList)
+  updateList(nodeList)
 }
