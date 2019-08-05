@@ -59,7 +59,8 @@ Additionally, **and this is important**, edges must be drawn FROM the child, TO 
    3. For each repo you'd like to add issues to, create an entry in the config file containing:
       * The unique path to your GitHub repo. This is usually a username or organization followed by a slash and then the repo name. For example: `holochain/soa-toolbox`
       * A [GitHub Personal Access Token](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line) with repo permissions.
-  [comment]: # (Watch out! There are non-breaking zero-width space characters in some URLs above)
+
+ [comment]: # (Watch out! There are non-breaking zero-width space characters in some URLs above)
 
 ## Usage
 
