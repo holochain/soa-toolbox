@@ -6,9 +6,9 @@ rtb.onReady(() => {
   rtb.initialize({
     extensionPoints: {
       bottomBar: {
-        title: 'ᴀᴄᴏʀɴ: Actionables',
+        title: 'ᴀᴄᴏʀɴ: Explore actionable smalls for selected node',
         svgIcon: actionablesIcon,
-        positionPriority: 2,
+        positionPriority: 993,
         onClick: () => {
           rtb.board.ui.openLeftSidebar('actionables-sidebar.html')
         }

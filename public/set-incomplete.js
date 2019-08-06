@@ -8,7 +8,7 @@ rtb.onReady(() => {
       bottomBar: {
         title: 'ᴀᴄᴏʀɴ: Set selected as incomplete',
         svgIcon: incompleteIcon,
-        positionPriority: 2,
+        positionPriority: 998,
         onClick: incompleteSelected
       }
     }

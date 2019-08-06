@@ -8,7 +8,7 @@ rtb.onReady(() => {
       bottomBar: {
         title: 'ᴀᴄᴏʀɴ: Set selected as uncertain',
         svgIcon: uncertainIcon,
-        positionPriority: 2,
+        positionPriority: 996,
         onClick: uncertainSelected
       }
     }

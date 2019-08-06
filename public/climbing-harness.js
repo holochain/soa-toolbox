@@ -13,9 +13,9 @@ rtb.onReady(() => {
   rtb.initialize({
     extensionPoints: {
       bottomBar: {
-        title: 'ᴀᴄᴏʀɴ: Climbing Harness',
+        title: 'ᴀᴄᴏʀɴ: Explore parents and children of selected node',
         svgIcon: climbingHarnessIcon,
-        positionPriority: 2,
+        positionPriority: 994,
         onClick: () => {
           rtb.board.ui.openLeftSidebar('climbing-harness-sidebar.html')
         }

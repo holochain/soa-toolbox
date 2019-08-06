@@ -7,7 +7,7 @@ rtb.onReady(() => {
       bottomBar: {
         title: 'ᴀᴄᴏʀɴ: Set selected as complete',
         svgIcon: completeIcon,
-        positionPriority: 2,
+        positionPriority: 997,
         onClick: completeSelected
       }
     }

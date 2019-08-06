@@ -43,9 +43,9 @@ rtb.onReady(() => {
   rtb.initialize({
     extensionPoints: {
       bottomBar: {
-        title: 'ᴀᴄᴏʀɴ: Create a GitHub issue for selected node', // note: gets turned to lowercase by Miro
+        title: 'ᴀᴄᴏʀɴ: Create GitHub issue for selected node', // note: gets turned to lowercase by Miro
         svgIcon: createIssueIcon,
-        positionPriority: 2,
+        positionPriority: 995,
         onClick: activateModal
       }
     }

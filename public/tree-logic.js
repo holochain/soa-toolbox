@@ -42,7 +42,7 @@ rtb.onReady(() => {
       bottomBar: {
         title: 'ᴀᴄᴏʀɴ: Calculate subtree sizes for selected', // note: gets turned to lowercase by Miro
         svgIcon: treeLogicIcon,
-        positionPriority: 2,
+        positionPriority: 996,
         onClick: updateDataForSelected
       }
     }
