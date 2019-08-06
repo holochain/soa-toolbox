@@ -5,6 +5,8 @@ rtb.onReady(() => {
   updateSidebar()
 })
 
+const MAX_NODES = 9999999
+
 // get the entire text of a node without any of the characters phloem adds
 function getFullTextFromNode(node) {
   return node.text.replace(/⋅/g,'') // remove newline markers if there are any
@@ -42,7 +44,9 @@ function makeNodeList(nodeArray) {
   nodeList = {}
   // console.log("nodearray:")
   // console.log(nodeArray)
-  nodeArray.forEach(node => {
+  // trim list of nodes to max length
+  nodeArrayTrimmed = nodeArray.slice(0, MAX_NODES)
+  nodeArrayTrimmed.forEach(node => {
     if (node == undefined) {
       return
     }
