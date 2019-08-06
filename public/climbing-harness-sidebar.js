@@ -7,7 +7,18 @@ rtb.onReady(() => {
 
 // get the entire text of a node without any of the characters phloem adds
 function getFullTextFromNode(node) {
-  return node.text.replace(/⋅/g,'') // remove newline markers if there are any
+  html = node.text
+  html = html.replace(/<style([\s\S]*?)<\/style>/gi, '')
+  html = html.replace(/<script([\s\S]*?)<\/script>/gi, '')
+  html = html.replace(/<\/div>/ig, '\n')
+  html = html.replace(/<\/li>/ig, '\n')
+  html = html.replace(/<li>/ig, '  *  ')
+  html = html.replace(/<\/ul>/ig, '\n')
+  html = html.replace(/<\/p>/ig, '\n')
+  html = html.replace(/<br\s*[\/]?>/gi, "\n")
+  html = html.replace(/<[^>]+>/ig, '')
+  text = html.replace(/⋅/g,'') // remove newline markers if there are any
+  return text
 }
 
 // calculate the issue title from a node's text
