@@ -34,6 +34,7 @@ textarea {
   margin: 0 auto;
   width: 100%;
   text-align: center;
+  font-weight: bold;
 }
 ul {
   padding-left: 5%;
