@@ -1,7 +1,6 @@
 rtb.onReady(() => {
   const completeIcon = `
-  <circle cx="12" cy="12" r="8" fill="#8fd14f" fill-rule="evenodd" stroke="#0ca789" stroke-width="2.5"/>
-  <circle cx="12" cy="12" r="10" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2.5"/>`
+  <circle cx="12" cy="12" r="10" fill="#8fd14f" fill-rule="evenodd" stroke="currentColor" stroke-width="2.5"/>`
 
   rtb.initialize({
     extensionPoints: {
