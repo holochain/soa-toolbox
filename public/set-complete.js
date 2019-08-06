@@ -25,10 +25,8 @@ async function completeSelected() {
 
   let root = selection[0]
 
-  rtb.board.widgets.shapes.update(root.id, { style: { 
+  rtb.board.widgets.shapes.update(root.id, { style: {
     backgroundColor: completeGreen,
-    borderColor: smallGreen,
-    borderWidth: 16
   }})
 }
 
