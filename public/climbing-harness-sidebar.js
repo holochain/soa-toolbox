@@ -1,6 +1,6 @@
-rtb.onReady(() => {
+miro.onReady(() => {
   // subscribe on user selected widgets
-  rtb.addListener(rtb.enums.event.SELECTION_UPDATED, updateSidebar)
+  miro.addListener(miro.enums.event.SELECTION_UPDATED, updateSidebar)
   // update the sidebar once when it first opens
   updateSidebar()
 })
@@ -76,9 +76,9 @@ function clearLists() {
 async function doOnclick(id) {
   // clear both lists so the sidebar is empty when the viewport is animating
   clearLists()
-  let zoomLevel = await rtb.board.viewport.getZoom()  // store current zoom level
-  await rtb.board.viewport.setZoom(zoomLevel * 1.10)  // zoom in just a bit
-  await rtb.board.selection.selectWidgets(id) // then select the current widget
+  let zoomLevel = await miro.board.viewport.getZoom()  // store current zoom level
+  await miro.board.viewport.setZoom(zoomLevel * 1.10)  // zoom in just a bit
+  await miro.board.selection.selectWidgets(id) // then select the current widget
 }
 // when a list item is moused over, zoom to that widget after a quick pause.
 // once looking at it, zoom out a bunch to show the context (where in the tree)
@@ -93,10 +93,10 @@ function doOnMouseover(id) {
 
   function previewZoom() {
     async function showContextZoom() {
-      let zoomLevel = await rtb.board.viewport.getZoom()
-      await rtb.board.viewport.setZoom(zoomLevel * showContextZoomFactor)
+      let zoomLevel = await miro.board.viewport.getZoom()
+      await miro.board.viewport.setZoom(zoomLevel * showContextZoomFactor)
     }
-    rtb.board.viewport.zoomToObject(id)
+    miro.board.viewport.zoomToObject(id)
     showContextZoomTimer = window.setTimeout(showContextZoom, delayBeforeShowContextZoom)
   }
 
@@ -105,7 +105,7 @@ function doOnMouseover(id) {
 // when the mouse stops hovering over a list item, return to the viewport we
 // saved when updateSidebar was called (usually when the node was selected)
 function doOnMouseout(id) {
-  rtb.board.viewport.setViewportWithAnimation(viewport)
+  miro.board.viewport.setViewportWithAnimation(viewport)
   window.clearTimeout(showContextZoomTimer)
   window.clearTimeout(previewZoomTimer)
 }
@@ -114,13 +114,13 @@ function doOnMouseout(id) {
 // the sidebar can match its background color, font weight, border color, and
 // border width.
 async function getNodeStyle(id) {
-  let nodes = await rtb.board.widgets.get({id: id})
+  let nodes = await miro.board.widgets.get({id: id})
   let node = nodes[0] // there can only be one node with a given ID
   return node.style
 }
 
 async function getNodeX(id) {
-  let nodes = await rtb.board.widgets.get({id: id})
+  let nodes = await miro.board.widgets.get({id: id})
   let node = nodes[0] // there can only be one node with a given ID
   return node.x
 }
@@ -242,7 +242,7 @@ async function updateSidebar(trigger = {data: ["go"]}) {
   ///// //// /// // / END FUNCTIONS / // /// //// /////
 
   // Get selected widgets
-  let widgets = await rtb.board.selection.get()
+  let widgets = await miro.board.selection.get()
   // If there's no selection, don't do anything
   if (widgets[0] == undefined) {
     return
@@ -261,8 +261,8 @@ async function updateSidebar(trigger = {data: ["go"]}) {
 
   // set up variables that updateLists implicitly needs
   var title = getTitleFromNode(widgets[0])
-  var allObjects = await rtb.board.getAllObjects()
-  viewport = await rtb.board.viewport.getViewport()
+  var allObjects = await miro.board.getAllObjects()
+  viewport = await miro.board.viewport.getViewport()
   var showContextZoomTimer
   var previewZoomTimer
 

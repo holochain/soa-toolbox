@@ -1,4 +1,4 @@
-rtb.onReady(() => {
+miro.onReady(() => {
   const climbingHarnessIcon = `
   <circle cx="12" cy="12" r="10" fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="2.5"/>
   <path fill="#619319" d="M13.9,9.4c-0.4-0.2-0.3-0.8-0.7-1.5c-0.4-0.7-1.1-0.9-1.4-1c-1.3-0.5-3.1-0.1-3.9,1C7.8,8,7.3,8.8,7.5,9.6
@@ -10,14 +10,14 @@ rtb.onReady(() => {
   <rect x="12.4" y="11.4" transform="matrix(0.7912 0.6116 -0.6116 0.7912 10.5819 -6.1004)" fill="#5B5B5B" width="3.6" height="2.2"/>
   <circle fill="#8E8E8E" cx="16.6" cy="14.2" r="0.8"/>
 `
-  rtb.initialize({
+  miro.initialize({
     extensionPoints: {
       bottomBar: {
         title: 'ᴀᴄᴏʀɴ: Explore parents and children of selected node',
         svgIcon: climbingHarnessIcon,
         positionPriority: 994,
         onClick: () => {
-          rtb.board.ui.openLeftSidebar('climbing-harness-sidebar.html')
+          miro.board.ui.openLeftSidebar('climbing-harness-sidebar.html')
         }
       }
     }
