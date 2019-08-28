@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="https://miro.com/app/static/rtb.uikit.css">
-    <script src="https://miro.com/app/static/rtb.sdk.1.1.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://miro.com/app/static/miro.uikit.css">
+    <script src="https://miro.com/app/static/sdk.1.1.js"></script>
     <script>
     async function populateSelector(){
       var serverURL = await getServerURL()
@@ -57,13 +57,13 @@
 
 &nbsp;&nbsp;<button onclick="
 createAndSendIssue(document.getElementById('repo-selector').value).then(_ => {
-  rtb.board.ui.closeModal()
+  miro.board.ui.closeModal()
 })
 ">Create issue</button>
 
 <br><br><br>
 
-<button class="close-button" onclick="rtb.board.ui.closeModal()">Cancel</button>
+<button class="close-button" onclick="miro.board.ui.closeModal()">Cancel</button>
 
 <script src="create-issue.js"></script>
 

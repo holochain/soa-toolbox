@@ -1,4 +1,4 @@
-rtb.onReady(() => {
+miro.onReady(() => {
   const treeLogicIcon = `
   <svg>
   <line x1="4" y1="8" x2="4" y2=16 stroke="hsl(10, 81%, 53%)" stroke-width="1"/>
@@ -37,7 +37,7 @@ rtb.onReady(() => {
   <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.25"/>
   </svg>`
 
-  rtb.initialize({
+  miro.initialize({
     extensionPoints: {
       bottomBar: {
         title: 'ᴀᴄᴏʀɴ: Calculate subtree sizes for selected', // note: gets turned to lowercase by Miro
@@ -52,25 +52,25 @@ rtb.onReady(() => {
 
 async function updateDataForSelected() {
   // gets the selected widgets on the board, returns an array
-  let selection = await rtb.board.selection.get()
+  let selection = await miro.board.selection.get()
 
   // validate that we can proceed with the selected item
   if (!validateSelection(selection)) return
 
-  rtb.showNotification('Calculating subtree sizes')
+  miro.showNotification('Calculating subtree sizes')
 
   // root is the widget that things will be calculated starting from and in relation to
   let root = selection[0]
 
   // get the entire list of objects on the board as an array
-  let allObjects = await rtb.board.getAllObjects()
+  let allObjects = await miro.board.getAllObjects()
 
   // collect the full list of edges
   let edges = allObjects.filter(i => i.type === 'LINE')
 
   // starting with the root and recursing, calculate all the sizes of the subtrees, and update the nodes
   getAndSetCountsForNode(root, allObjects, edges)
-  rtb.showNotification('Successfully set subtree sizes')
+  miro.showNotification('Successfully set subtree sizes')
 }
 
 const uncertainRed = "#f24726"
@@ -146,7 +146,7 @@ function getAndSetCountsForNode(node, allObjects, edges) {
 
     // now update the text for the node
     const newText = `${main_text}<br>${countPrefix} ${countText}`
-    rtb.board.widgets.shapes.update(node.id, { text: newText })
+    miro.board.widgets.shapes.update(node.id, { text: newText })
 
 
   // return counts so that recursion can happen
@@ -247,13 +247,13 @@ function predict(history) {
 function validateSelection(selection) {
   // validate only one selection
   if (selection.length > 1) {
-    rtb.showErrorNotification('You must only have one node selected')
+    miro.showErrorNotification('You must only have one node selected')
     return false
   } else if (selection.length === 0) {
-    rtb.showErrorNotification('You must have at least one node selected')
+    miro.showErrorNotification('You must have at least one node selected')
     return false
   } else if (selection[0].type !== "SHAPE") {
-    rtb.showErrorNotification('The selected element must be a node')
+    miro.showErrorNotification('The selected element must be a node')
     return false
   } else {
     return true

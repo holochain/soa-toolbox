@@ -1,4 +1,4 @@
-rtb.onReady(() => {
+miro.onReady(() => {
   const createIssueIcon = `
   <line x1="3.5" y1="8" x2="3.5" y2=16 stroke="hsl(10, 81%, 53%)" stroke-width="1"/>
   <line x1="4" y1="8" x2="4" y2=16 stroke="hsl(10, 81%, 53%)" stroke-width="1"/>
@@ -40,7 +40,7 @@ rtb.onReady(() => {
   <line x1="12" y1="15.5" x2="12" y2="18" stroke="currentColor" stroke-width="2.5"/>
   `
 
-  rtb.initialize({
+  miro.initialize({
     extensionPoints: {
       bottomBar: {
         title: 'ᴀᴄᴏʀɴ: Create GitHub issue for selected node', // note: gets turned to lowercase by Miro
@@ -84,7 +84,7 @@ function getBodyFromNode(root, boardInfo) {
 async function getServerURL() {
   let configBackgroundColor = "#CA59E2"
   // find nodes with the right background color. Miro turns hex codes lowercase
-  var configNodes = await rtb.board.widgets.get({type: 'shape', style:{backgroundColor: configBackgroundColor.toLowerCase()}})
+  var configNodes = await miro.board.widgets.get({type: 'shape', style:{backgroundColor: configBackgroundColor.toLowerCase()}})
   var configNode = configNodes[0]
   var serverURL = configNode.text
   // console.log(configNode)
@@ -95,22 +95,22 @@ async function getServerURL() {
 // check that the selection is valid and then activate the modal popup
 async function activateModal() {
   // gets the selected widgets on the board, returns an array
-  let selection = await rtb.board.selection.get()
+  let selection = await miro.board.selection.get()
   // validate that we can proceed with the selected item
   if (!validateSelection(selection)) return
 
   // prompt the user to choose the repo in which to create the issue
-  rtb.board.ui.openModal('create-issue-modal.html')
+  miro.board.ui.openModal('create-issue-modal.html')
 }
 
 // create and send an issue of the selected node to the specified repo
 async function createAndSendIssue(repoPath) {
   // gets the selected widgets on the board, returns an array
-  let selection = await rtb.board.selection.get()
+  let selection = await miro.board.selection.get()
   // gets the board info
-  let boardInfo = await rtb.board.info.get()
+  let boardInfo = await miro.board.info.get()
 
-  rtb.showNotification('Creating issue...')
+  miro.showNotification('Creating issue...')
   console.log("creating issue to send to repo: " + repoPath)
 
   let root = selection[0]
@@ -121,7 +121,7 @@ async function createAndSendIssue(repoPath) {
   // send the issue to simpleserver.js to be sent to GitHub
   sendIssue(title, text, repoPath)
 
-  rtb.showNotification(`Successfully created issue in repo: ${repoPath}`)
+  miro.showNotification(`Successfully created issue in repo: ${repoPath}`)
 }
 
 const uncertainRed = "#f24726"
@@ -168,13 +168,13 @@ async function sendIssue(title, body, repoPath, assignee = null, labels = null) 
 function validateSelection(selection) {
   // validate only one selection
   if (selection.length > 1) {
-    rtb.showErrorNotification('You must only have one node selected')
+    miro.showErrorNotification('You must only have one node selected')
     return false
   } else if (selection.length === 0) {
-    rtb.showErrorNotification('You must have at least one node selected')
+    miro.showErrorNotification('You must have at least one node selected')
     return false
   } else if (selection[0].type !== "SHAPE") {
-    rtb.showErrorNotification('The selected element must be a node')
+    miro.showErrorNotification('The selected element must be a node')
     return false
   } else {
     return true
